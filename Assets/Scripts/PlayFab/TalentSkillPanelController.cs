@@ -15,8 +15,7 @@ public class TalentSkillPanelController : MonoBehaviour {
     public GameObject lobbyPanel;           //大厅面板
     public GameObject roomPanel;            //房间面板
     public GameObject talentSkillPanel;     //天赋系统面板
-    public Button backButton;               //返回按钮
-    public Text currentPanel;               //当前面板文本信息
+
 
     public GameObject[] maskImages;     //天赋技能遮挡面板，用于遮挡未激活的天赋技能
     public Sprite[] skillSprites;       //天赋技能图片

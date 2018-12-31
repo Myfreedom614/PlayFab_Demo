@@ -39,10 +39,10 @@ public class UserMessagePanelController : MonoBehaviour {
         backButton.onClick.RemoveAllListeners();
         backButton.onClick.AddListener(delegate ()
         {
-            if (PhotonNetwork.inRoom)
-                roomPanel.SetActive(true);
-            else
-                lobbyPanel.SetActive(true);                 //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
+            //if (PhotonNetwork.inRoom)
+            //    roomPanel.SetActive(true);
+            //else
+            //    lobbyPanel.SetActive(true);                 //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
             userMessagePanel.SetActive(false);              //如果玩家在游戏大厅中，点击返回按钮后，游戏界面显示游戏大厅。
         });
 
@@ -98,7 +98,7 @@ public class UserMessagePanelController : MonoBehaviour {
         //发送密码修改邮件至账号绑定邮箱
         SendAccountRecoveryEmailRequest request = new SendAccountRecoveryEmailRequest()
         {
-            TitleId = PlayFabUserData.titleId,
+            TitleId = PlayFabSettings.TitleId,
             Email = PlayFabUserData.email
         };
         Debug.Log(PlayFabUserData.email);
@@ -121,7 +121,7 @@ public class UserMessagePanelController : MonoBehaviour {
     //“注销”按钮的响应函数
     public void ClickLogoutButton()
     {
-        PhotonNetwork.Disconnect();
+        //PhotonNetwork.Disconnect();
         mainPanel.SetActive(false);
         loginPanel.SetActive(true);
     }

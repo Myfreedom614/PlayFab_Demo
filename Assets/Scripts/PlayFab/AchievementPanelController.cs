@@ -43,10 +43,10 @@ public class AchievementPanelController : MonoBehaviour {
         currentPanel.text = "成 就";
         backButton.onClick.RemoveAllListeners();        
         backButton.onClick.AddListener(delegate {
-            if (PhotonNetwork.inRoom)           //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
-                roomPanel.SetActive(true);
-            else                                //如果玩家在游戏大厅中，点击返回按钮后，游戏界面显示游戏大厅。
-                lobbyPanel.SetActive(true);
+            //if (PhotonNetwork.inRoom)           //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
+            //    roomPanel.SetActive(true);
+            //else                                //如果玩家在游戏大厅中，点击返回按钮后，游戏界面显示游戏大厅。
+            //    lobbyPanel.SetActive(true);
             achievementPanel.SetActive(false);
         });
         processingWindow.SetActive(false);      //禁用“处理中”提示窗口

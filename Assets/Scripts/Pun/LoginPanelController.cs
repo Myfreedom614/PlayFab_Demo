@@ -12,9 +12,11 @@ public class LoginPanelController : MonoBehaviourPunCallbacks, IConnectionCallba
 
 	public GameObject loginPanel;		
 	public GameObject userMessage;		
-	public Button backButton;			
-	public GameObject lobbyPanel;		
-	public GameObject roomPanel;		
+	public Button backButton;
+    //public GameObject lobbyPanel;
+    public GameObject mainPanel;
+
+    public GameObject roomPanel;		
 	public Text connectionState;
 
     public InputField Username;
@@ -29,11 +31,11 @@ public class LoginPanelController : MonoBehaviourPunCallbacks, IConnectionCallba
 
 		} 
 		else
-			SetLobbyPanelActive ();
+			SetMainPanelActive ();
 		connectionState.text = "";
         if (PhotonNetwork.InRoom)
         {
-            lobbyPanel.SetActive(false);
+            mainPanel.SetActive(false);
             roomPanel.SetActive(true);
         }
 
@@ -50,15 +52,15 @@ public class LoginPanelController : MonoBehaviourPunCallbacks, IConnectionCallba
 
 	public void SetLoginPanelActive(){
 		loginPanel.SetActive (true);			
-		backButton.gameObject.SetActive (false);	
-		lobbyPanel.SetActive (false);				
+		backButton.gameObject.SetActive (false);
+        mainPanel.SetActive (false);				
 		if(roomPanel!=null)
 			roomPanel.SetActive (false);			
 	}
-	public void SetLobbyPanelActive(){				
+	public void SetMainPanelActive(){				
 		loginPanel.SetActive (false);			
-		backButton.gameObject.SetActive (true);		
-		lobbyPanel.SetActive (true);				
+		backButton.gameObject.SetActive (true);
+        mainPanel.SetActive (true);				
 	}
 
 	public void ClickLogInButton(){							
@@ -73,7 +75,7 @@ public class LoginPanelController : MonoBehaviourPunCallbacks, IConnectionCallba
 
     public void ClickGuestButton()
     {
-        SetLobbyPanelActive();
+        SetMainPanelActive();
 
         PhotonNetwork.GameVersion = "1.0";
         _AuthService.SilentlyAuthenticate();
@@ -129,7 +131,7 @@ public class LoginPanelController : MonoBehaviourPunCallbacks, IConnectionCallba
             PhotonNetwork.ConnectUsingSettings();
 
         PhotonNetwork.LocalPlayer.NickName = (PlayFabAuthService.PlayFabId.Split(new Char[] { '-' }))[0];
-        SetLobbyPanelActive();
+        SetMainPanelActive();
 
     }
 

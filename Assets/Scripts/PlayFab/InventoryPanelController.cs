@@ -12,8 +12,7 @@ public class InventoryPanelController : MonoBehaviour {
     public GameObject roomPanel;                //房间面板
     public GameObject inventoryPanel;           //玩家仓库面板
     public GameObject inventoryLoadingWindow;   //玩家仓库加载中提示窗口
-	public Button backButton;                   //返回按钮
-    public Text currentPanel;                   //当前面板文本信息
+
 
     public GameObject[] inventoryItems;         //道具条目
     public GameObject previousButton;           //上一页按钮
@@ -32,7 +31,6 @@ public class InventoryPanelController : MonoBehaviour {
 
     //玩家仓库界面启用后，初始化仓库界面信息
 	void OnEnable () {
-        currentPanel.text = "仓 库";
 		isEquiped = false;
 		inventoryLoadingWindow.SetActive (true);        //提示仓库数据正在加载
 		inventoryItemDetails.SetActive (false);
@@ -43,16 +41,6 @@ public class InventoryPanelController : MonoBehaviour {
         //获取玩家仓库信息
 		GetUserInventoryRequest request = new GetUserInventoryRequest ();
 		PlayFabClientAPI.GetUserInventory (request, OnGetUserInventory, OnPlayFabError);
-
-        //为返回按钮绑定响应函数
-		backButton.onClick.RemoveAllListeners ();
-		backButton.onClick.AddListener (delegate {
-            if (PhotonNetwork.inRoom)           //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
-                roomPanel.SetActive(true);
-            else                                //如果玩家在游戏大厅中，点击返回按钮后，游戏界面显示游戏大厅。
-                lobbyPanel.SetActive(true);
-			inventoryPanel.SetActive (false);
-		});
 	}
 
     //玩家仓库信息获取成功后调用，在仓库界面显示玩家拥有的道具

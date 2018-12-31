@@ -21,7 +21,11 @@ public class PlayFabAuthService{
     private static string _playFabId;
     public static string SessionTicket { get { return _sessionTicket; } }
     private static string _sessionTicket;
+    public static string entityId { get { return _entityId; } }
+    private static string _entityId;
 
+    public static string entityType { get { return _entityType; } }
+    private static string _entityType;
     public string Email;
     public string Username;
     public string Password;
@@ -67,6 +71,8 @@ public class PlayFabAuthService{
             //store identity and session
             _playFabId = result.PlayFabId;
             _sessionTicket = result.SessionTicket;
+            _entityId = result.EntityToken.Entity.Id;
+            _entityType = result.EntityToken.Entity.Type;
 
             if (OnLoginSuccess != null)
             {
@@ -131,6 +137,8 @@ public class PlayFabAuthService{
                     //Store identity and session
                     _playFabId = result.PlayFabId;
                     _sessionTicket = result.SessionTicket;
+                    _entityId = result.EntityToken.Entity.Id;
+                    _entityType = result.EntityToken.Entity.Type;
 
                     //Report login result back to subscriber.
                     OnLoginSuccess.Invoke();
@@ -172,8 +180,10 @@ public class PlayFabAuthService{
             if (OnLoginSuccess != null)
             {
                 //Store identity and session
-                _playFabId = registerResult.PlayFabId;
-                _sessionTicket = registerResult.SessionTicket;
+                _playFabId = result.PlayFabId;
+                _sessionTicket = result.SessionTicket;
+                _entityId = result.EntityToken.Entity.Id;
+                _entityType = result.EntityToken.Entity.Type;
 
                 //Report login result back to subscriber.
                 OnLoginSuccess.Invoke();
@@ -209,6 +219,8 @@ public class PlayFabAuthService{
             //Store Identity and session
             _playFabId = result.PlayFabId;
             _sessionTicket = result.SessionTicket;
+            _entityId = result.EntityToken.Entity.Id;
+            _entityType = result.EntityToken.Entity.Type;
 
             //check if we want to get this callback directly or send to event subscribers.
             if (callback == null && OnLoginSuccess != null)

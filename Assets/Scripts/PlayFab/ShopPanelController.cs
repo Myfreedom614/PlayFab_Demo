@@ -4,38 +4,35 @@ using System.Collections;
 using System.Collections.Generic;
 using PlayFab;
 using PlayFab.ClientModels;
-//商城面板控制器
 public class ShopPanelController : MonoBehaviour
 {
 
-    public GameObject lobbyPanel;           //大厅面板
-    public GameObject roomPanel;            //房间面板
-    public GameObject shopPanel;            //商城面板
-    public GameObject shopLoadingWindow;    //“商城加载中”提示窗口
-    public Button backButton;               //返回按钮
-    public Text currentPanel;               //当前面板文本信息
+    public GameObject lobbyPanel;
+    public GameObject roomPanel;
+    public GameObject shopPanel;
+    public GameObject shopLoadingWindow;
 
-    public GameObject[] shopItemsPanel;     //商城道具面板
-    public Sprite diamondCurrencySprite;    //钻石图片
-    public Sprite goldCurrencySprite;       //金币图片
-    public GameObject previousButton;       //上一页按钮
-    public GameObject nextButton;           //下一页按钮
-    public Text pageMessage;                //页面信息
-    public GameObject shopItemDetails;      //商城道具详细信息面板
 
-    public static int selectedItem;                 //选中的商城道具
-    public static List<CatalogItem> shopItems;      //商城道具列表
-    public static List<ItemInstance> userItems;     //玩家道具列表
+    public GameObject[] shopItemsPanel;
+    public Sprite diamondCurrencySprite;
+    public Sprite goldCurrencySprite;
+    public GameObject previousButton;
+    public GameObject nextButton;
+    public Text pageMessage;
+    public GameObject shopItemDetails;
+
+    public static int selectedItem;
+    public static List<CatalogItem> shopItems;
+    public static List<ItemInstance> userItems;
 
     private int itemsLength;
     private const int itemsPerPage = 6;
     private int currentPageNumber;
     private int maxPageNumber;
 
-    //商城面板激活时调用，获取商城道具信息，显示在商城面板中
     void OnEnable()
     {
-        currentPanel.text = "商 城";
+        //currentPanel.text = "商 城";
 		shopLoadingWindow.SetActive(true);
 		shopItemDetails.SetActive(false);
         foreach (GameObject go in shopItemsPanel)
@@ -47,13 +44,6 @@ public class ShopPanelController : MonoBehaviour
         GetUserInventoryRequest request = new GetUserInventoryRequest();
         PlayFabClientAPI.GetUserInventory(request, OnGetUserInventory, OnPlayFabError);
 
-        backButton.onClick.RemoveAllListeners();
-        backButton.onClick.AddListener(delegate {
-            if (PhotonNetwork.inRoom)
-                roomPanel.SetActive(true);
-            else lobbyPanel.SetActive(true);
-            shopPanel.SetActive(false);
-        });
     }
 
     //玩家仓库信息获取成功时调用

@@ -11,8 +11,7 @@ public class LeaderboardController : MonoBehaviour {
     public GameObject roomPanel;                //房间面板
     public GameObject leaderboardPanel;         //玩家排行榜面板
     public GameObject leaderboardLoadingLabel;  //玩家排行版加载提示
-    public Button backButton;                   //返回按钮
-    public Text currentPanel;                   //当前面板文本信息
+
 
     public Button TotalKillButton;              //“累计杀敌数”排行榜按钮
 
@@ -28,7 +27,6 @@ public class LeaderboardController : MonoBehaviour {
 
     //玩家排行榜界面启用时调用，初始化排行榜界面
 	void OnEnable () {
-        currentPanel.text = "排 行";
         localUserTexts = localUser.GetComponentsInChildren<Text>();
         localUserTexts[1].text = PlayFabUserData.username;
         localUserImage = localUser.GetComponentsInChildren<Image>()[1];
@@ -37,14 +35,6 @@ public class LeaderboardController : MonoBehaviour {
         TotalKillButton.Select();
 		ClickTotalKillButton ();
 
-		backButton.onClick.RemoveAllListeners ();		//移除返回按钮绑定的所有监听事件
-		backButton.onClick.AddListener (delegate() {    //为返回按钮绑定新的监听事件
-            if (PhotonNetwork.inRoom)
-                roomPanel.SetActive(true);              //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
-            else 
-                lobbyPanel.SetActive(true);             //如果玩家在游戏大厅中，点击返回按钮后，游戏界面显示游戏大厅。
-            leaderboardPanel.SetActive(false);
-		});
     }
     /* 学生作业：实现排行榜按钮的响应函数
      * 作业提示：

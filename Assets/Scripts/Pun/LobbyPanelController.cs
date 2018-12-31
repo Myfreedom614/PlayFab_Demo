@@ -12,7 +12,8 @@ public class LobbyPanelController : MonoBehaviourPunCallbacks {
 
 	public GameObject loginPanel;
 	public GameObject lobbyPanel;
-	public GameObject userMessage;
+    public GameObject mainPanel;
+    public GameObject userMessage;
 	public Button backButton;
 	public GameObject lobbyLoadingLabel;
 	public GameObject roomLoadingLabel;
@@ -36,7 +37,16 @@ public class LobbyPanelController : MonoBehaviourPunCallbacks {
     {
         currentPageNumber = 1;
         maxPageNumber = 1;
-        lobbyLoadingLabel.SetActive(true);
+        if (PhotonNetwork.InLobby)
+        {
+            lobbyLoadingLabel.SetActive(false);
+
+        }
+        else
+        {
+            lobbyLoadingLabel.SetActive(true);
+
+        }
         roomLoadingLabel.SetActive(false);
         if (createRoomPanel != null)
             createRoomPanel.SetActive(false);
@@ -57,7 +67,7 @@ public class LobbyPanelController : MonoBehaviourPunCallbacks {
         {
             PhotonNetwork.Disconnect();
             loginPanel.SetActive(true);
-            lobbyPanel.SetActive(false);
+            mainPanel.SetActive(false);
             userMessage.SetActive(false);
             backButton.gameObject.SetActive(false);
         });
