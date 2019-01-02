@@ -12,16 +12,18 @@ public class ShopPanelController : MonoBehaviour
     public GameObject shopPanel;
     public GameObject shopLoadingWindow;
 
+    public Text goldCurrencyCount;
+    public Text diamondCurrencyCount;
+
+    public Text UserMessageLabel;
+
 
     public GameObject[] shopItemsPanel;
-    public Sprite diamondCurrencySprite;
-    public Sprite goldCurrencySprite;
+
     public GameObject previousButton;
     public GameObject nextButton;
     public Text pageMessage;
-    public GameObject shopItemDetails;
 
-    public static int selectedItem;
     public static List<CatalogItem> shopItems;
     public static List<ItemInstance> userItems;
 
@@ -32,26 +34,21 @@ public class ShopPanelController : MonoBehaviour
 
     void OnEnable()
     {
-        //currentPanel.text = "商 城";
 		shopLoadingWindow.SetActive(true);
-		shopItemDetails.SetActive(false);
         foreach (GameObject go in shopItemsPanel)
         {
             go.SetActive(false);
         }
 
-        //获取玩家仓库信息
         GetUserInventoryRequest request = new GetUserInventoryRequest();
         PlayFabClientAPI.GetUserInventory(request, OnGetUserInventory, OnPlayFabError);
 
     }
 
-    //玩家仓库信息获取成功时调用
     void OnGetUserInventory(GetUserInventoryResult result)
     {
         userItems = result.Inventory;
 
-        //获取商城道具列表
         GetCatalogItemsRequest request = new GetCatalogItemsRequest()
         {
             CatalogVersion = PlayFabUserData.catalogVersion
@@ -59,27 +56,25 @@ public class ShopPanelController : MonoBehaviour
         PlayFabClientAPI.GetCatalogItems(request, OnGetCatalogItems, OnPlayFabError);
     }
 
-    //商城道具列表获取成功后调用
     void OnGetCatalogItems(GetCatalogItemsResult result)
     {
         List<CatalogItem> temp = result.Catalog;
+        //remove default weapon in store
         for (int i = temp.Count - 1; i >= 0; i--)
         {
-            if (temp[i].VirtualCurrencyPrices.ContainsKey("FR"))    //剔除AK47在商店中的显示（AK47是免费枪支）
+            if (temp[i].VirtualCurrencyPrices.ContainsKey("FR"))
                 temp.RemoveAt(i);
         }
-        //计算商城道具个数，计算商城面板页数
         shopItems = temp;
         itemsLength = temp.Count;
         currentPageNumber = 1;
         maxPageNumber = (itemsLength - 1) / itemsPerPage + 1;
         pageMessage.text = currentPageNumber.ToString() + "/" + maxPageNumber.ToString();
-        ButtonControl();        //翻页按钮控制
-        ShowItems();            //显示商城道具
+        ButtonControl();
+        ShowItems();
         shopLoadingWindow.SetActive(false);
     }
 
-    //翻页按钮控制
     void ButtonControl()
     {
         if (currentPageNumber == 1)
@@ -91,7 +86,6 @@ public class ShopPanelController : MonoBehaviour
         else
             nextButton.SetActive(true);
     }
-    //显示商城道具
     public void ShowItems()
     {
         int start, end, i, j;
@@ -110,21 +104,18 @@ public class ShopPanelController : MonoBehaviour
             images = shopItemsPanel[j].GetComponentsInChildren<Image>();
             button = shopItemsPanel[j].GetComponentInChildren<Button>();
             texts[0].text = shopItems[i].DisplayName;
-            images[1].sprite = GameInfo.guns[shopItems[i].ItemClass];
-            //道具是金币购买还是钻石购买
-            if (shopItems[i].VirtualCurrencyPrices.ContainsKey("GC"))
+
+            if (shopItems[i].VirtualCurrencyPrices.ContainsKey("AU"))
             {
-                texts[1].text = shopItems[i].VirtualCurrencyPrices["GC"].ToString();
-                images[2].sprite = goldCurrencySprite;
+                texts[1].text ="GC"+ shopItems[i].VirtualCurrencyPrices["AU"].ToString();
             }
-            else if (shopItems[i].VirtualCurrencyPrices.ContainsKey("DC"))
+            else if (shopItems[i].VirtualCurrencyPrices.ContainsKey("GM"))
             {
-                texts[1].text = shopItems[i].VirtualCurrencyPrices["DC"].ToString();
-                images[2].sprite = diamondCurrencySprite;
+                texts[1].text ="DC"+ shopItems[i].VirtualCurrencyPrices["GM"].ToString();
             }
             button.onClick.RemoveAllListeners();
 
-            //根据道具的类型（ItemClass），判断玩家是否已经拥有该物品
+
             bool hasItems = false;
             foreach (ItemInstance ii in userItems)
             {
@@ -137,16 +128,40 @@ public class ShopPanelController : MonoBehaviour
             if (hasItems)
             {
                 button.interactable = false;
-                button.GetComponentInChildren<Text>().text = "已拥有";
+                button.GetComponentInChildren<Text>().text = "Owned";
             }
             else
             {
                 button.interactable = true;
-                button.GetComponentInChildren<Text>().text = "购买";
-                button.onClick.AddListener(delegate
-                {
-                    selectedItem = itemNum;
-                    shopItemDetails.SetActive(true);
+                button.GetComponentInChildren<Text>().text = "Buy";
+
+                var item = shopItems[itemNum];
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(delegate {
+                    if (item.VirtualCurrencyPrices.ContainsKey("AU"))
+                    {
+                        PurchaseItemRequest request = new PurchaseItemRequest()
+                        {
+                            CatalogVersion = PlayFabUserData.catalogVersion,
+                            VirtualCurrency = "	AU",
+                            Price = (int)item.VirtualCurrencyPrices["AU"],
+                            ItemId = item.ItemId
+                        };
+                        PlayFabClientAPI.PurchaseItem(request, OnPurchaseItem, OnPlayFabPurchaseError);
+                        UserMessageLabel.text = "Purchasing...";
+                    }
+                    else if (item.VirtualCurrencyPrices.ContainsKey("GM"))
+                    {
+                        PurchaseItemRequest request = new PurchaseItemRequest()
+                        {
+                            CatalogVersion = PlayFabUserData.catalogVersion,
+                            VirtualCurrency = "GM",
+                            Price = (int)item.VirtualCurrencyPrices["GM"],
+                            ItemId = item.ItemId
+                        };
+                        PlayFabClientAPI.PurchaseItem(request, OnPurchaseItem, OnPlayFabPurchaseError);
+                        UserMessageLabel.text = "Purchasing...";
+                    }
                 });
             }
             shopItemsPanel[j].SetActive(true);
@@ -155,13 +170,34 @@ public class ShopPanelController : MonoBehaviour
             shopItemsPanel[j].SetActive(false);
     }
 
-    //PlayFab请求出错时调用，在控制台输出错误信息
+
+    void OnPurchaseItem(PurchaseItemResult result)
+    {
+        GetUserInventoryRequest request = new GetUserInventoryRequest();
+        PlayFabClientAPI.GetUserInventory(request, OnGetUserInventoryPurchaseItem, OnPlayFabError);
+    }
+
+    void OnGetUserInventoryPurchaseItem(GetUserInventoryResult result)
+    {
+        goldCurrencyCount.text = result.VirtualCurrency["GC"].ToString();
+        diamondCurrencyCount.text = result.VirtualCurrency["DC"].ToString();
+        UserMessageLabel.text = "Purchase Success";
+
+        userItems = result.Inventory;
+        shopPanel.GetComponent<ShopPanelController>().ShowItems();
+    }
+
+    void OnPlayFabPurchaseError(PlayFabError error)
+    {
+        Debug.LogError(error.ErrorDetails);
+        UserMessageLabel.text = "Purchase Fail";
+    }
+
     void OnPlayFabError(PlayFabError error)
     {
         Debug.LogError(error.ErrorDetails);
     }
 
-    //上一页按钮
     public void ClickPreviousButton()
     {
         currentPageNumber--;
@@ -170,7 +206,6 @@ public class ShopPanelController : MonoBehaviour
         ShowItems();
     }
 
-    //下一页按钮
     public void ClickNextButton()
     {
         currentPageNumber++;

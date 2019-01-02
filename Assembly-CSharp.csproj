@@ -421,9 +421,7 @@
     <Compile Include="Assets\Scripts\PlayFab\PaymentPanelController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\PlayFabAuthService.cs" />
     <Compile Include="Assets\Scripts\PlayFab\PlayFabUserData.cs" />
-    <Compile Include="Assets\Scripts\PlayFab\ShopItemDetailsController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\ShopPanelController.cs" />
-    <Compile Include="Assets\Scripts\PlayFab\TalentSkillPanelController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\UserMessagePanelController.cs" />
     <Compile Include="Assets\Scripts\Pun\CreateRoomController.cs" />
     <Compile Include="Assets\Scripts\Pun\LobbyPanelController.cs" />

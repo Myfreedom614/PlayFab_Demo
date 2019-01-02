@@ -20,7 +20,7 @@ public class InventoryItemDetailsController : MonoBehaviour {
 	void OnEnable(){
         //获得玩家选中的条目
 		item = InventoryPanelController.items [InventoryPanelController.selectedItem];
-		itemImage.sprite = GameInfo.guns [item.ItemClass];  //显示道具的图片
+
 		itemName.text = item.DisplayName;                   //显示道具的名字
 		itemDescription.text = "";
         //根据PlayFab GameManager中设置的自定义道具属性，显示道具的描述

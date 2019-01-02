@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayFabEditorPrefsSO
   m_EditorClassIdentifier: 
   DevAccountEmail: renhe@wicresoft.com
-  DevAccountToken: 1jitbkjfrbp3kbkd9gw5kfacfj19torbr4drr9fd15hgbqs4pqipy7bzghdmiyuxrmkef7c7xohiemqh4xjy8my89dmybikusenwsk37dnobas5jk83x6ta171b6rs8zah1tq96e4pyi364yir7b7asske85qj8rikrg9ne7go6yiih1fb41cq7r7tsr6cww73p6najy
+  DevAccountToken: a9b58esn8tojktby9mpwt335ndtpz8zhbp8bmhfaycob4uxujhjw5wk19fgbiy68e9frmnqkpbnz6j5eqnjh9cao57bxpnj61a89b1rxjow7hhxk5pks1e3tiozcswjbddjwy3pe6octjpk5es9e9isbxegegdp9jhxxmd3n9sporfu11gbtbxys4nrhg33debkinbcc
   SelectedStudio: My Game Studio
   SdkPath: Assets/PlayFabSdk
   EdExPath: 

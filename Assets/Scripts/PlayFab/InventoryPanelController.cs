@@ -84,7 +84,6 @@ public class InventoryPanelController : MonoBehaviour {
 			Button button = inventoryItems [j].transform.Find ("Button").GetComponent<Button>();    //道具装备按钮
 
 			itemName.text = items [i].DisplayName;
-			image.sprite = GameInfo.guns [items [i].ItemClass];
 			if (PlayFabUserData.equipedWeapon == items [i].ItemClass) {
 				equip.gameObject.SetActive(true);
 				button.gameObject.SetActive (false);

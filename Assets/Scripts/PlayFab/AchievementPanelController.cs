@@ -5,14 +5,10 @@ using System.Collections.Generic;
 using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.Json;
-//成就系统面板控制器
 public class AchievementPanelController : MonoBehaviour {
 
-    public GameObject lobbyPanel;           //大厅面板
-    public GameObject roomPanel;            //房间面板
-    public GameObject achievementPanel;     //成就系统面板
-    public Button backButton;               //返回按钮
-    public Text currentPanel;               //当前面板文本信息
+
+    public GameObject achievementPanel;
 
     public Button achievementButton;        //“成就”按钮
     public GameObject achievement;          //“成就”页面
@@ -22,8 +18,6 @@ public class AchievementPanelController : MonoBehaviour {
     public Text pageMessage;                //页面信息
     public GameObject processingWindow;     //“处理中”提示窗口
 
-    public GameObject reward;               //“奖励”页面
-    public GameObject[] rewardItems;        //“奖励”页面中的奖励条目信息
     public Text goldCurrencyCount;          //玩家的金币数量显示（领取奖励后，玩家的金币数量发生变化）
 
     private List<string> achievementKeys;                   //成就任务的键值
@@ -40,15 +34,6 @@ public class AchievementPanelController : MonoBehaviour {
 
     void OnEnable()
     {
-        currentPanel.text = "成 就";
-        backButton.onClick.RemoveAllListeners();        
-        backButton.onClick.AddListener(delegate {
-            //if (PhotonNetwork.inRoom)           //如果玩家在游戏房间中，点击返回按钮后，游戏界面显示游戏房间。
-            //    roomPanel.SetActive(true);
-            //else                                //如果玩家在游戏大厅中，点击返回按钮后，游戏界面显示游戏大厅。
-            //    lobbyPanel.SetActive(true);
-            achievementPanel.SetActive(false);
-        });
         processingWindow.SetActive(false);      //禁用“处理中”提示窗口
         
         Init(); //成就系统数据初始化
@@ -90,7 +75,6 @@ public class AchievementPanelController : MonoBehaviour {
     public void ClickAchievementButton()
     {
         achievement.SetActive(true);    //显示“成就”界面
-        reward.SetActive(false);        //禁用“奖励”界面
 
         //初始化页面信息
         currentPageNumber = 1;
@@ -211,65 +195,7 @@ public class AchievementPanelController : MonoBehaviour {
         Debug.LogError("Get an error:" + error.Error);  //在控制台显示失败原因
         processingWindow.SetActive(false);              //禁用“处理中”窗口
     }
-
-    //点击“奖励”按钮，显示成就的奖励界面
-    public void ClickRewardButton()
-    {
-        achievement.SetActive(false);
-        reward.SetActive(true);
-        ShowRewardItems();
-    }
-
-    //显示成就奖励条目
-    void ShowRewardItems()
-    {
-        int length = rewardItems.Length,i;
-        Dictionary<string, string> myData;
-        Text[] texts;
-        Button button;
-
-        //显示成就奖励条目
-        for (i = 0; i < rewardKeys.Count; i++)
-        {
-            string rewardName = rewardKeys[i];
-            texts = rewardItems[i].GetComponentsInChildren<Text>();
-            button = rewardItems[i].GetComponentInChildren<Button>();
-            myData = PlayFabSimpleJson.DeserializeObject<Dictionary<string, string>>(rewardData[rewardName]);
-            int rewardValue = int.Parse(myData["RewardValue"]);
-            //成就奖励
-            texts[1].text = myData["RewardValue"];
-            //累计获得成就点和奖励目标成就点
-            texts[2].text = "累计获得成就点" + PlayFabUserData.achievementPoints + "/" + myData["TargetPoints"];
-            //如果成就奖励已领取
-            if (PlayFabUserData.userData.ContainsKey(rewardName))
-            {
-                button.interactable = false;
-                texts[3].text = "已领取";
-            }
-            //如果成就奖励未领取，且成就奖励目标已达成
-            else if (PlayFabUserData.achievementPoints >= int.Parse(myData["TargetPoints"]))
-            {
-                button.interactable = true;
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(delegate ()
-                {
-                    GetReward(rewardName, rewardValue);
-                });
-                texts[3].text = "领取";
-            }
-            //如果成就奖励未完成
-            else
-            {
-                button.interactable = false;
-                texts[3].text = "未完成";
-            }
-            rewardItems[i].SetActive(true);
-        }
-        for (; i < length; i++)
-        {
-            rewardItems[i].SetActive(false);
-        }
-    }
+    
 
     /* 学生作业：实现成就奖励领取按钮的响应函数GetReward以及相关PlayFab请求成功或者失败的回调函数
      * GetReward函数的两个参数解释：name表示成就奖励名称，value表示成就奖励的金币数。
