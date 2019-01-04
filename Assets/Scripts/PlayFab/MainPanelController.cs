@@ -87,6 +87,8 @@ public class MainPanelController : MonoBehaviour{
 		Debug.Log ("User Data Loaded");
         PlayFabUserData.userData = result.Data;
 
+
+
         if (result.Data.ContainsKey("AchievementPoints"))
             PlayFabUserData.achievementPoints = int.Parse(result.Data["AchievementPoints"].Value);
         else PlayFabUserData.achievementPoints = 0;
@@ -137,26 +139,31 @@ public class MainPanelController : MonoBehaviour{
     void OnGetUserEntityData(GetObjectsResponse result)
     {
         Debug.Log("User Data Loaded");
-        PlayFabUserData.userEntityData = result.Objects;
+        var dataObject = PlayFab.Json.PlayFabSimpleJson.DeserializeObject<Dictionary<string, object>>(result.Objects["PlayerData"].DataObject.ToString());
+        PlayFabUserData.userEntityData = dataObject;
 
-        if (result.Objects.ContainsKey("AchievementPoints"))
-            PlayFabUserData.achievementPoints = int.Parse(result.Objects["AchievementPoints"].EscapedDataObject);
+        if (dataObject.ContainsKey("Number"))
+            PlayFabUserData.achievementPoints = int.Parse(dataObject["Number"].ToString());
         else PlayFabUserData.achievementPoints = 0;
-        if (result.Objects.ContainsKey("LV"))
-            PlayFabUserData.lv = int.Parse(result.Objects["LV"].EscapedDataObject);
+
+        if (dataObject.ContainsKey("AchievementPoints"))
+            PlayFabUserData.achievementPoints = int.Parse(dataObject["AchievementPoints"].ToString());
+        else PlayFabUserData.achievementPoints = 0;
+        if (dataObject.ContainsKey("LV"))
+            PlayFabUserData.lv = int.Parse(dataObject["LV"].ToString());
         else
             PlayFabUserData.lv = 1;
         lvValue.text = PlayFabUserData.lv.ToString();
-        if (result.Objects.ContainsKey("Exp"))
-            PlayFabUserData.exp = int.Parse(result.Objects["Exp"].EscapedDataObject);
+        if (dataObject.ContainsKey("Exp"))
+            PlayFabUserData.exp = int.Parse(result.Objects["Exp"].ToString());
         else PlayFabUserData.exp = 0;
 
-        if (result.Objects.ContainsKey("TotalKill"))
-            PlayFabUserData.totalKill = int.Parse(result.Objects["TotalKill"].EscapedDataObject);
+        if (dataObject.ContainsKey("TotalKill"))
+            PlayFabUserData.totalKill = int.Parse(result.Objects["TotalKill"].ToString());
         else
             PlayFabUserData.totalKill = 0;
-        if (result.Objects.ContainsKey("TotalDeath"))
-            PlayFabUserData.totalDeath = int.Parse(result.Objects["TotalDeath"].EscapedDataObject);
+        if (dataObject.ContainsKey("TotalDeath"))
+            PlayFabUserData.totalDeath = int.Parse(result.Objects["TotalDeath"].ToString());
         else
             PlayFabUserData.totalDeath = 0;
         if (PlayFabUserData.totalDeath == 0)
@@ -164,12 +171,12 @@ public class MainPanelController : MonoBehaviour{
         else
             PlayFabUserData.killPerDeath = PlayFabUserData.totalKill * 100.0f / PlayFabUserData.totalDeath;
 
-        if (result.Objects.ContainsKey("TotalWin"))
-            PlayFabUserData.totalWin = int.Parse(result.Objects["TotalWin"].EscapedDataObject);
+        if (dataObject.ContainsKey("TotalWin"))
+            PlayFabUserData.totalWin = int.Parse(result.Objects["TotalWin"].ToString());
         else
             PlayFabUserData.totalWin = 0;
-        if (result.Objects.ContainsKey("TotalGame"))
-            PlayFabUserData.totalGame = int.Parse(result.Objects["TotalGame"].EscapedDataObject);
+        if (dataObject.ContainsKey("TotalGame"))
+            PlayFabUserData.totalGame = int.Parse(result.Objects["TotalGame"].ToString());
         else
             PlayFabUserData.totalGame = 0;
         if (PlayFabUserData.totalGame == 0)
@@ -177,8 +184,8 @@ public class MainPanelController : MonoBehaviour{
         else
             PlayFabUserData.winPercentage = PlayFabUserData.totalWin * 100.0f / PlayFabUserData.totalGame;
 
-        if (result.Objects.ContainsKey("EquipedWeapon"))
-            PlayFabUserData.equipedWeapon = result.Objects["EquipedWeapon"].EscapedDataObject;
+        if (dataObject.ContainsKey("EquipedWeapon"))
+            PlayFabUserData.equipedWeapon = result.Objects["EquipedWeapon"].ToString();
         else
             PlayFabUserData.equipedWeapon = "AK47";
 
@@ -234,6 +241,7 @@ public class MainPanelController : MonoBehaviour{
     void OnGetAccountInfo(GetAccountInfoResult result)
     {
         PlayFabUserData.email = result.AccountInfo.PrivateInfo.Email;
+        PlayFabUserData.username = result.AccountInfo.Username;
         OnMessageResponse();
     }
 

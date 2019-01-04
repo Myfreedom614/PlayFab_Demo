@@ -34,12 +34,6 @@ public class UserMessagePanelController : MonoBehaviour {
         processingWindow.SetActive(false);
         currentPanel.text = "Player";
 
-        backButton.onClick.RemoveAllListeners();
-        backButton.onClick.AddListener(delegate ()
-        {
-            userMessagePanel.SetActive(false);
-        });
-
         userId.text = "Player ID："+PlayFabUserData.playFabId;    
 
         currentRank.text = GameInfo.levelRankNames[PlayFabUserData.lv - 1];
@@ -71,7 +65,7 @@ public class UserMessagePanelController : MonoBehaviour {
     {
         if (PlayFabUserData.email == null)
         {
-            modifyPasswordLabel.text = "该账号未绑定邮箱，无法修改密码";
+            modifyPasswordLabel.text = "Password can't be changed if the account isn't bound to the mailbox,";
             return;
         }
         processingWindow.SetActive(true);

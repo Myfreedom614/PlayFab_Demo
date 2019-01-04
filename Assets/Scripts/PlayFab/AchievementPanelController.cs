@@ -10,47 +10,50 @@ public class AchievementPanelController : MonoBehaviour {
 
     public GameObject achievementPanel;
 
-    public Button achievementButton;        //“成就”按钮
-    public GameObject achievement;          //“成就”页面
-    public GameObject[] achievementItems;   //“成就”页面中的成就任务信息
-    public GameObject previousButton;       //“上一页”按钮
-    public GameObject nextButton;           //“下一页”按钮
-    public Text pageMessage;                //页面信息
-    public GameObject processingWindow;     //“处理中”提示窗口
+    public Button achievementButton;
+    public GameObject achievement;
+    public GameObject[] achievementItems;
+    public GameObject previousButton;
+    public GameObject nextButton;
+    public Text pageMessage;
+    public GameObject processingWindow;
 
-    public Text goldCurrencyCount;          //玩家的金币数量显示（领取奖励后，玩家的金币数量发生变化）
+    public Text goldCurrencyCount;
 
-    private List<string> achievementKeys;                   //成就任务的键值
-    private Dictionary<string, string> achievementData;     //成就任务的数据
-    private int itemsLength;                //成就任务个数
-    private const int itemsPerPage = 8;     //每页显示的成就任务数量
-    private int currentPageNumber;          //当前页数
-    private int maxPageNumber;              //总页数
+    private List<string> achievementKeys;
+    private Dictionary<string, string> achievementData;
+    private int itemsLength;
+    private const int itemsPerPage = 8;
+    private int currentPageNumber;
+    private int maxPageNumber;
 
-    private List<string> rewardKeys;                //成就奖励的名称（Key）
-    private Dictionary<string, string> rewardData;  //成就奖励的数据（Value）
+    private List<string> rewardKeys;
+    private Dictionary<string, string> rewardData;
 
     private int requestNum;                         
 
     void OnEnable()
     {
-        processingWindow.SetActive(false);      //禁用“处理中”提示窗口
+        processingWindow.SetActive(false);
         
-        Init(); //成就系统数据初始化
+        Init(); 
 
-        //显示“成就”界面
         achievementButton.Select(); 
-        ClickAchievementButton();
+        currentPageNumber = 1;
+        maxPageNumber = (itemsLength - 1) / itemsPerPage + 1;
+        pageMessage.text = currentPageNumber.ToString() + "/" + maxPageNumber.ToString();
+
+        ButtonControl();
+        ShowAchievementItems();
     }
 
-    //成就系统数据初始化。
     void Init()
     {
         achievementData = new Dictionary<string, string>(); 
         achievementKeys = new List<string>();
-        foreach (KeyValuePair<string, string> kvp in GameInfo.titleData)    //遍历GameInfo中游戏titleData的信息
+        foreach (KeyValuePair<string, string> kvp in GameInfo.titleData)
         {
-            if (kvp.Key.Contains("Achievement"))            //如果titleData数据的键值包含Achievement，表示该数据是成就任务数据
+            if (kvp.Key.Contains("Achievement"))
             {
                 achievementData.Add(kvp.Key,kvp.Value);
                 achievementKeys.Add(kvp.Key);
@@ -61,9 +64,9 @@ public class AchievementPanelController : MonoBehaviour {
         rewardData = new Dictionary<string, string>();
         rewardKeys = new List<string>();
 
-        foreach (KeyValuePair<string, string> kvp in GameInfo.titleData)    //遍历GameInfo中游戏titleData的信息
+        foreach (KeyValuePair<string, string> kvp in GameInfo.titleData)
         {
-            if (kvp.Key.Contains("Reward"))                 //如果titleData数据的键值包含Reward，表示该数据是成就奖励数据
+            if (kvp.Key.Contains("Reward"))
             {
                 rewardData.Add(kvp.Key, kvp.Value);
                 rewardKeys.Add(kvp.Key);
@@ -71,21 +74,7 @@ public class AchievementPanelController : MonoBehaviour {
         }
     }
 
-    //“成就”按钮的响应事件
-    public void ClickAchievementButton()
-    {
-        achievement.SetActive(true);    //显示“成就”界面
 
-        //初始化页面信息
-        currentPageNumber = 1;
-        maxPageNumber = (itemsLength - 1) / itemsPerPage + 1;
-        pageMessage.text = currentPageNumber.ToString() + "/" + maxPageNumber.ToString();
-
-        ButtonControl();                //翻页按钮控制
-        ShowAchievementItems();         //显示成就条目
-    }
-
-    //翻页按钮控制
     void ButtonControl()
     {
         if (currentPageNumber == 1)
@@ -98,10 +87,8 @@ public class AchievementPanelController : MonoBehaviour {
             nextButton.SetActive(true);
     }
 
-    //显示成就任务条目
     void ShowAchievementItems()
     {
-        //根据当前页数计算需要显示的成就条目
         int start, end, i, j;
         start = (currentPageNumber - 1) * itemsPerPage;
         if (currentPageNumber == maxPageNumber)
@@ -110,127 +97,94 @@ public class AchievementPanelController : MonoBehaviour {
             end = start + itemsPerPage;
         Text[] texts;
         Button button;
-        Dictionary<string, string> myData;
+        Dictionary<string, string> AchievementItemData;
 
-        //在“成就”页面显示成就条目
         for (i = start, j = 0; i < end; i++, j++)
         {
             string achievementName = achievementKeys[i];
             texts = achievementItems[j].GetComponentsInChildren<Text>();
             button = achievementItems[j].GetComponentInChildren<Button>();
-            myData = PlayFabSimpleJson.DeserializeObject<Dictionary<string, string>>(achievementData[achievementName]);
-            texts[0].text = myData["Name"];                                         //成就名称
-            texts[1].text = myData["Description"] + "：" + myData["Count"];         //成就描述            
-            texts[2].text = myData["Point"];                                        //成就点数
-            int point = int.Parse(myData["Point"]);
+            AchievementItemData = PlayFabSimpleJson.DeserializeObject<Dictionary<string, string>>(achievementData[achievementName]);
+            texts[0].text = AchievementItemData["Name"];
+            texts[1].text = AchievementItemData["Description"] + "：" + AchievementItemData["Count"];
+            texts[2].text = AchievementItemData["Reward"];
+            int point = int.Parse(AchievementItemData["Reward"]);
 
-            //如果玩家已经领取该成就
             if (PlayFabUserData.userData.ContainsKey(achievementName))
             {
-                texts[3].text = "已领取";      
-                button.interactable = false;            //禁用按钮的交互
+                texts[3].text = "Received";      
+                button.interactable = false;
             }
-            //如果玩家未领取该成就，但是已完成成就任务
-            else if((myData["Description"] == "累计杀敌" && PlayFabUserData.totalKill >= int.Parse(myData["Count"])) 
-                || (myData["Description"] == "胜利场次" && PlayFabUserData.totalWin >= int.Parse(myData["Count"])))
+            else if((AchievementItemData["Description"] == "TotalKill" && PlayFabUserData.totalKill >= int.Parse(AchievementItemData["Count"])) 
+                || (AchievementItemData["Description"] == "TotalWin" && PlayFabUserData.totalWin >= int.Parse(AchievementItemData["Count"])))
             {
-                texts[3].text = "领取";
-                button.interactable = true;             //启用按钮的交互
+                texts[3].text = "Get";
+                button.interactable = true;
                 button.onClick.RemoveAllListeners();
-                //为按钮绑定响应事件
                 button.onClick.AddListener(delegate ()
                 {
                     GetAchievement(achievementName,point); 
                 });
             }
-            //如果玩家未完成该成就
             else
             {
-                texts[3].text = "未完成";
-                button.interactable = false;            //禁用按钮的交互
+                texts[3].text = "UnCompleted";
+                button.interactable = false;
             }
 
-            achievementItems[j].SetActive(true);        //显示成就系统条目
+            achievementItems[j].SetActive(true);
         }
         for (; j < itemsPerPage; j++)
             achievementItems[j].SetActive(false);
     }
     
-    /// <summary>
-    /// 完成成就任务，领取成就点
-    /// name：成就任务名字
-    /// point：成就任务点数
-    /// </summary>
+
     void GetAchievement(string name,int point)  
     {
-        processingWindow.SetActive(true);               //启用“处理中”窗口
-        PlayFabUserData.achievementPoints += point;     //计算成就点数
+        processingWindow.SetActive(true);
 
-        //更新玩家数据Player Data：成就点数、成就任务已领取的标记
-        UpdateUserDataRequest request = new UpdateUserDataRequest();    
-        request.Data = new Dictionary<string, string>();
-        request.Data.Add(name, "true");
-        request.Data.Add("AchievementPoints", PlayFabUserData.achievementPoints.ToString());
-        PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
+        PlayFabClientAPI.WritePlayerEvent(new WriteClientPlayerEventRequest()
+        {
+            Body = new Dictionary<string, object>() {
+                { "Achievement", name}
+            },
+            EventName = "player_get_achievement"
+        },
+        result => 
+            PlayFabClientAPI.UpdateUserData(
+                new UpdateUserDataRequest() { Data = new Dictionary<string, string> { { name, "true" } } },
+            OnUpdateUserData,
+            OnPlayFabError),
+        OnPlayFabError);
     }
 
-    //玩家数据Player Data更新成功后调用
     void OnUpdateUserData(UpdateUserDataResult result)
     {
-        //重新获取玩家数据Player Data
         GetUserDataRequest request = new GetUserDataRequest();
         PlayFabClientAPI.GetUserData(request, OnGetUserData, OnPlayFabError);
     }
 
-    //玩家数据Player Data获取成功后调用
     void OnGetUserData(GetUserDataResult result) {
-        PlayFabUserData.userData = result.Data;     //在PlayFabUserData中保存玩家数据Player Data
-        processingWindow.SetActive(false);          //禁用“处理中”窗口
-        ShowAchievementItems();                     //玩家领取了成就，更新成就任务条目的显示
+        PlayFabUserData.userData = result.Data;
+        processingWindow.SetActive(false);
+        ShowAchievementItems();
     }
 
-    //PlayFab的请求失败时调用
+    void onWritePlayerEvent(WriteEventResponse result)
+    {
+        UpdateUserDataRequest request = new UpdateUserDataRequest();
+        request.Data = new Dictionary<string, string>();
+        request.Data.Add(name, "true");
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest() {Data = new Dictionary<string, string> {name, "true" } }, OnUpdateUserData, OnPlayFabError);
+    }
+
     void OnPlayFabError(PlayFabError error)
     {
-        Debug.LogError("Get an error:" + error.Error);  //在控制台显示失败原因
-        processingWindow.SetActive(false);              //禁用“处理中”窗口
+        Debug.LogError("Get an error:" + error.Error); 
+        processingWindow.SetActive(false);
     }
-    
 
-    /* 学生作业：实现成就奖励领取按钮的响应函数GetReward以及相关PlayFab请求成功或者失败的回调函数
-     * GetReward函数的两个参数解释：name表示成就奖励名称，value表示成就奖励的金币数。
-     * 作业提示：
-     * 首先，启用processingWindow窗口，提示正在处理玩家领取成就奖励的请求；
-     * 其次，使用UpdateUserDataRequest函数，更新玩家的自定义属性Player Data,包括玩家已领取相关成就奖励的数据；
-     * UpdateUserDataRequest函数调用成功后，使用GetUserDataRequest函数，重新获取玩家的自定义属性，保存在PlayFabUserData类的userData中；
-     * 接着，使用AddUserVirtualCurrencyRequest函数，增加玩家的金币数量（该请求需要包含两个参数：VirtualCurrency表示增加的虚拟货币种类，Amount表示增加的虚拟货币数量）；
-     * AddUserVirtualCurrencyRequest函数调用成功后，更新玩家金币数量的显示
-     * 最后，若两个请求都调用成功，禁用processingWindow窗口，并更新成就奖励条目的显示。
-     */
 
-	//领取成就奖励
-	void GetReward(string name,int value)
-	{
-		
-	}
-
-	//更新玩家数据Player Data（成就奖励已领取）成功后调用
-	void OnUpdateUserRewardData(UpdateUserDataResult result)
-	{
-		
-	}
-	//玩家数据Player Data获取成功后（成就奖励信息的获取）调用
-	void OnGetUserData2(GetUserDataResult result)
-	{
-		
-	}
-	//玩家虚拟货币增加成功时调用
-	void OnAddUserVirtualCurrencyResult(ModifyUserVirtualCurrencyResult result)
-	{
-		
-	}
-
-    //上一页按钮
     public void ClickPreviousButton()
     {
         currentPageNumber--;
@@ -238,7 +192,6 @@ public class AchievementPanelController : MonoBehaviour {
         ButtonControl();
         ShowAchievementItems();
     }
-    //下一页按钮
     public void ClickNextButton()
     {
         currentPageNumber++;

@@ -4,58 +4,51 @@ using System.Collections;
 using System.Collections.Generic;
 using PlayFab;
 using PlayFab.ClientModels;
+using PlayFab.DataModels;
 
-//玩家仓库界面控制器
+
 public class InventoryPanelController : MonoBehaviour {
 
-	public GameObject lobbyPanel;               //大厅面板
-    public GameObject roomPanel;                //房间面板
-    public GameObject inventoryPanel;           //玩家仓库面板
-    public GameObject inventoryLoadingWindow;   //玩家仓库加载中提示窗口
+	public GameObject lobbyPanel;
+    public GameObject roomPanel;
+    public GameObject inventoryPanel; 
+    public GameObject inventoryLoadingWindow;
 
 
-    public GameObject[] inventoryItems;         //道具条目
-    public GameObject previousButton;           //上一页按钮
-	public GameObject nextButton;               //下一页按钮
-	public Text pageMessage;                    //页面信息
-	public GameObject inventoryItemDetails;     //道具条目的详细信息
+    public GameObject[] inventoryItems;
+    public GameObject previousButton;
+	public GameObject nextButton;
+	public Text pageMessage;
 
-	public static int selectedItem;             //选中的道具
-	public static List<ItemInstance> items;     //玩家的道具信息
-	public static bool isEquiped;               //玩家是否切换装备的道具
+	public int selectedItem;
+	public List<ItemInstance> items;
 
-	private int itemsLength;                    //玩家拥有的道具总数
-	private const int itemsPerPage = 6;         //每页显示的道具个数
-	private int currentPageNumber;              //当前页数
-	private int maxPageNumber;                  //总页数
+	private int itemsLength;
+	private const int itemsPerPage = 6;
+	private int currentPageNumber;
+	private int maxPageNumber;
 
-    //玩家仓库界面启用后，初始化仓库界面信息
 	void OnEnable () {
-		isEquiped = false;
-		inventoryLoadingWindow.SetActive (true);        //提示仓库数据正在加载
-		inventoryItemDetails.SetActive (false);
+		inventoryLoadingWindow.SetActive (true);
 		foreach (GameObject go in inventoryItems) {
 			go.SetActive (false);
 		}
 
-        //获取玩家仓库信息
 		GetUserInventoryRequest request = new GetUserInventoryRequest ();
 		PlayFabClientAPI.GetUserInventory (request, OnGetUserInventory, OnPlayFabError);
 	}
 
-    //玩家仓库信息获取成功后调用，在仓库界面显示玩家拥有的道具
 	void OnGetUserInventory(GetUserInventoryResult result){
-		items = result.Inventory;       //玩家的道具列表
+		items = result.Inventory;
 		itemsLength = items.Count;
 		currentPageNumber = 1;
 		maxPageNumber = (itemsLength - 1) / itemsPerPage + 1;
 		pageMessage.text = currentPageNumber.ToString () + "/" + maxPageNumber.ToString ();
-		ButtonControl ();               //翻页按钮控制
-		ShowItems ();                   //显示玩家的道具列表
-		inventoryLoadingWindow.SetActive (false);   //仓库信息读取完毕，禁用提示面板
+		ButtonControl ();
+		ShowItems ();
+		inventoryLoadingWindow.SetActive (false);
 	}
 
-    //翻页按钮控制
 	void ButtonControl(){
 		if (currentPageNumber == 1)
 			previousButton.SetActive (false);
@@ -67,7 +60,6 @@ public class InventoryPanelController : MonoBehaviour {
 			nextButton.SetActive (true);
 	}
 
-    //显示玩家的道具列表
 	void ShowItems(){
 		int start, end, i, j;
 		start = (currentPageNumber - 1) * itemsPerPage;
@@ -78,10 +70,9 @@ public class InventoryPanelController : MonoBehaviour {
 		for (i = start,j = 0; i < end; i++,j++) {
 			int itemNum = i;
 
-			Text itemName = inventoryItems [j].transform.Find ("Name").GetComponent<Text>();        //道具名称
-			Image image = inventoryItems [j].transform.Find ("ItemImage").GetComponent<Image>();    //道具图片
-			Text equip = inventoryItems [j].transform.Find ("Equip").GetComponent<Text>();          //道具是否装备
-			Button button = inventoryItems [j].transform.Find ("Button").GetComponent<Button>();    //道具装备按钮
+			Text itemName = inventoryItems [j].transform.Find ("Name").GetComponent<Text>();
+			Text equip = inventoryItems [j].transform.Find ("Equip").GetComponent<Text>();
+			Button button = inventoryItems [j].transform.Find ("Button").GetComponent<Button>();
 
 			itemName.text = items [i].DisplayName;
 			if (PlayFabUserData.equipedWeapon == items [i].ItemClass) {
@@ -90,44 +81,64 @@ public class InventoryPanelController : MonoBehaviour {
 			} else {
 				equip.gameObject.SetActive(false);
 				button.gameObject.SetActive (true);
-                //为“装备”按钮绑定响应事件
 				button.onClick.RemoveAllListeners ();
 				button.onClick.AddListener (delegate {
-					selectedItem = itemNum;
-					inventoryItemDetails.SetActive (true);
-				});
+                    var item = items[itemNum];
+                    PlayFabUserData.equipedWeapon = item.ItemClass;
+                    UpdateUserDataRequest request = new UpdateUserDataRequest() { };
+                    request.Data = new Dictionary<string, string>();
+                    request.Data.Add("EquipedWeapon", item.ItemClass);
+                    PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
+
+                    SetObjectsRequest requestObject = new SetObjectsRequest();
+                    requestObject.Entity.Id = PlayFabAuthService.entityId;
+                    requestObject.Entity.Type = PlayFabAuthService.entityType;
+                    var dataObject = new Dictionary<string, object>()
+                        {
+                            {"EquipedWeapon", item.ItemClass}
+                        };
+                    var dataList = new List<SetObject>()
+                        {
+                            new SetObject()
+                            {
+                                ObjectName = "PlayerData",
+                                DataObject = dataObject
+                            },
+                        };
+                    requestObject.Objects = dataList;
+                    PlayFabDataAPI.SetObjects(requestObject, OnUpdateUserData, OnPlayFabError);
+
+                });
 			}
 			inventoryItems [j].SetActive (true);
 		}
 		for (; j < itemsPerPage; j++)
 			inventoryItems [j].SetActive (false);
 	}
-
-    //PlayFab请求出错时调用，在控制台输出错误信息
-	void OnPlayFabError(PlayFabError error){
+    void OnUpdateUserData(UpdateUserDataResult result)
+    {
+        ShowItems();
+        Debug.Log("User Data Saved");
+    }
+    void OnUpdateUserData(SetObjectsResponse result)
+    {
+        ShowItems();
+        Debug.Log("User Data Saved");
+    }
+    void OnPlayFabError(PlayFabError error){
 		Debug.LogError (error.ErrorDetails);
 	}
 
-    //上一页按钮
     public void ClickPreviousButton(){
 		currentPageNumber--;
 		pageMessage.text = currentPageNumber.ToString () + "/" + maxPageNumber.ToString ();
 		ButtonControl ();
 		ShowItems ();
 	}
-    //下一页按钮
     public void ClickNextButton(){
 		currentPageNumber++;
 		pageMessage.text = currentPageNumber.ToString () + "/" + maxPageNumber.ToString ();
 		ButtonControl ();
 		ShowItems ();
-	}
-
-    //如果玩家更新了装备道具，更新玩家仓库信息的显示
-	void Update(){
-		if (isEquiped) {
-			ShowItems ();
-			isEquiped = false;
-		}
 	}
 }
