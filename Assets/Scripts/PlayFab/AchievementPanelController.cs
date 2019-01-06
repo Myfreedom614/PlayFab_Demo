@@ -137,10 +137,10 @@ public class AchievementPanelController : MonoBehaviour {
         for (; j < itemsPerPage; j++)
             achievementItems[j].SetActive(false);
     }
-    
 
     void GetAchievement(string name,int point)  
     {
+
         processingWindow.SetActive(true);
 
         PlayFabClientAPI.WritePlayerEvent(new WriteClientPlayerEventRequest()
@@ -168,14 +168,6 @@ public class AchievementPanelController : MonoBehaviour {
         PlayFabUserData.userData = result.Data;
         processingWindow.SetActive(false);
         ShowAchievementItems();
-    }
-
-    void onWritePlayerEvent(WriteEventResponse result)
-    {
-        UpdateUserDataRequest request = new UpdateUserDataRequest();
-        request.Data = new Dictionary<string, string>();
-        request.Data.Add(name, "true");
-        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest() {Data = new Dictionary<string, string> {name, "true" } }, OnUpdateUserData, OnPlayFabError);
     }
 
     void OnPlayFabError(PlayFabError error)

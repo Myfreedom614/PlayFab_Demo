@@ -13,8 +13,6 @@ public class GameInfo {
 
     public static string[] levelRankNames;
     public static int[] levelExps;
-    public static Sprite[] levelMedals;
 
     public static Dictionary<string, string> titleData;
-
 }

@@ -87,11 +87,6 @@ public class MainPanelController : MonoBehaviour{
 		Debug.Log ("User Data Loaded");
         PlayFabUserData.userData = result.Data;
 
-
-
-        if (result.Data.ContainsKey("AchievementPoints"))
-            PlayFabUserData.achievementPoints = int.Parse(result.Data["AchievementPoints"].Value);
-        else PlayFabUserData.achievementPoints = 0;
         if (result.Data.ContainsKey("LV"))
             PlayFabUserData.lv = int.Parse(result.Data["LV"].Value);
         else
@@ -122,15 +117,12 @@ public class MainPanelController : MonoBehaviour{
 			PlayFabUserData.totalGame = int.Parse (result.Data ["TotalGame"].Value);
 		else
 			PlayFabUserData.totalGame = 0;
-		if (PlayFabUserData.totalGame == 0)
-			PlayFabUserData.winPercentage = 0.0f;
-		else
-			PlayFabUserData.winPercentage = PlayFabUserData.totalWin * 100.0f / PlayFabUserData.totalGame;
+
 
         if (result.Data.ContainsKey ("EquipedWeapon"))
 			PlayFabUserData.equipedWeapon = result.Data["EquipedWeapon"].Value;
 		else
-			PlayFabUserData.equipedWeapon = "AK47";
+			PlayFabUserData.equipedWeapon = "nor";
         
         GetUserInventoryRequest getUserInventoryRequest = new GetUserInventoryRequest();
         PlayFabClientAPI.GetUserInventory(getUserInventoryRequest, OnGetUserInventory, OnPlayFabError);
@@ -142,13 +134,6 @@ public class MainPanelController : MonoBehaviour{
         var dataObject = PlayFab.Json.PlayFabSimpleJson.DeserializeObject<Dictionary<string, object>>(result.Objects["PlayerData"].DataObject.ToString());
         PlayFabUserData.userEntityData = dataObject;
 
-        if (dataObject.ContainsKey("Number"))
-            PlayFabUserData.achievementPoints = int.Parse(dataObject["Number"].ToString());
-        else PlayFabUserData.achievementPoints = 0;
-
-        if (dataObject.ContainsKey("AchievementPoints"))
-            PlayFabUserData.achievementPoints = int.Parse(dataObject["AchievementPoints"].ToString());
-        else PlayFabUserData.achievementPoints = 0;
         if (dataObject.ContainsKey("LV"))
             PlayFabUserData.lv = int.Parse(dataObject["LV"].ToString());
         else
@@ -179,15 +164,11 @@ public class MainPanelController : MonoBehaviour{
             PlayFabUserData.totalGame = int.Parse(result.Objects["TotalGame"].ToString());
         else
             PlayFabUserData.totalGame = 0;
-        if (PlayFabUserData.totalGame == 0)
-            PlayFabUserData.winPercentage = 0.0f;
-        else
-            PlayFabUserData.winPercentage = PlayFabUserData.totalWin * 100.0f / PlayFabUserData.totalGame;
 
         if (dataObject.ContainsKey("EquipedWeapon"))
             PlayFabUserData.equipedWeapon = result.Objects["EquipedWeapon"].ToString();
         else
-            PlayFabUserData.equipedWeapon = "AK47";
+            PlayFabUserData.equipedWeapon = "nor";
 
         GetUserInventoryRequest getUserInventoryRequest = new GetUserInventoryRequest();
         PlayFabClientAPI.GetUserInventory(getUserInventoryRequest, OnGetUserInventory, OnPlayFabError);
@@ -211,7 +192,7 @@ public class MainPanelController : MonoBehaviour{
 		}
         if (!hasEquipedWeapon)
         {
-            PlayFabUserData.equipedWeapon = "AK47";
+            PlayFabUserData.equipedWeapon = "nor";
 
             UpdateUserDataRequest request = new UpdateUserDataRequest();
             request.Data = new Dictionary<string, string>();
@@ -248,6 +229,7 @@ public class MainPanelController : MonoBehaviour{
     void OnGetTitleData(GetTitleDataResult result)
     {
         GameInfo.titleData = result.Data;
+
         OnMessageResponse();
     }
     void OnPlayFabError(PlayFabError error)

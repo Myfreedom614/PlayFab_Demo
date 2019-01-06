@@ -6,14 +6,7 @@ using PlayFab.ClientModels;
 
 public class UserMessagePanelController : MonoBehaviour {
 
-    public GameObject loginPanel;
-    public GameObject mainPanel;
-    public GameObject lobbyPanel;
-    public GameObject roomPanel;
     public GameObject userMessagePanel;
-
-    public Button backButton;
-    public Text currentPanel;
 
     public Text userId;
     public Text currentRank;
@@ -32,7 +25,6 @@ public class UserMessagePanelController : MonoBehaviour {
     void OnEnable () {
         modifyPasswordLabel.text = "";
         processingWindow.SetActive(false);
-        currentPanel.text = "Player";
 
         userId.text = "Player ID："+PlayFabUserData.playFabId;    
 
@@ -94,7 +86,5 @@ public class UserMessagePanelController : MonoBehaviour {
     {
         Photon.Pun.PhotonNetwork.Disconnect();
         PlayFabAuthenticationAPI.ForgetAllCredentials();
-        mainPanel.SetActive(false);
-        loginPanel.SetActive(true);
     }
 }

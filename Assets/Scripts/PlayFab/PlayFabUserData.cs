@@ -7,7 +7,7 @@ using PlayFab.DataModels;
 
 public class PlayFabUserData : MonoBehaviour {
 
-	public static string equipedWeapon="47";
+	public static string equipedWeapon="nor";
 	public static string catalogVersion = "GunWeapon";
 
     public static string playFabId = "";
@@ -17,8 +17,6 @@ public class PlayFabUserData : MonoBehaviour {
     public static Dictionary<string, UserDataRecord> userData;
     public static Dictionary<string, object> userEntityData;
 
-    public static int Number = 0;
-    public static int achievementPoints;
 
     public static int lv = 0;
     public static int exp = 0;
@@ -29,5 +27,4 @@ public class PlayFabUserData : MonoBehaviour {
 
 	public static int totalWin = 0;
 	public static int totalGame = 0;
-	public static float winPercentage = 0.0f;
 }

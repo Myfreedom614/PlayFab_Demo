@@ -1,16 +1,10 @@
 ﻿<Properties StartupConfiguration="{80F7ECE3-56FD-350F-437F-E5ACA3855511}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Pun/LoginPanelController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PlayFab/UserMessagePanelController.cs">
     <Files>
-      <File FileName="Assets/Scripts/PlayFab/IAPManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/PlayFab/MainPanelController.cs" Line="71" Column="52" />
-      <File FileName="Assets/Scripts/Pun/RoomPanelController.cs" Line="18" Column="5" />
-      <File FileName="Assets/Scripts/PlayFab/PlayFabUserData.cs" Line="15" Column="5" />
-      <File FileName="Assets/Scripts/Pun/LoginPanelController.cs" Line="112" Column="32" />
-      <File FileName="Assets/Scripts/PlayFab/AchievementPanelController.cs" Line="324" Column="1" />
-      <File FileName="Assets/Scripts/PlayFab/PaymentPanelController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Pun/LobbyPanelController.cs" Line="11" Column="29" />
-      <File FileName="Assets/Scripts/PlayFab/UserMessagePanelController.cs" Line="42" Column="30" />
-      <File FileName="Assets/PlayFabSdk/Client/PlayFabClientModels.cs" Line="2913" Column="18" />
+      <File FileName="Assets/Scripts/PlayFab/MainPanelController.cs" Line="214" Column="9" />
+      <File FileName="Assets/Scripts/PlayFab/GameInfo.cs" Line="15" Column="34" />
+      <File FileName="Assets/Scripts/PlayFab/AchievementPanelController.cs" Line="67" Column="54" />
+      <File FileName="Assets/Scripts/PlayFab/UserMessagePanelController.cs" Line="36" Column="52" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
