@@ -413,7 +413,6 @@
     <Compile Include="Assets\Scripts\PlayFab\BuyGoldPageController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\GameInfo.cs" />
     <Compile Include="Assets\Scripts\PlayFab\IAPManager.cs" />
-    <Compile Include="Assets\Scripts\PlayFab\IapPanelController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\InventoryPanelController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\LeaderboardController.cs" />
     <Compile Include="Assets\Scripts\PlayFab\MainPanelController.cs" />

@@ -181,7 +181,11 @@ public class MainPanelController : MonoBehaviour{
 			OnMessageResponse();
 			return;
 		}
-		goldCurrencyCount.text = result.VirtualCurrency ["AU"].ToString();
+        PlayFabUserData.diamondCurrencyCount = result.VirtualCurrency["GM"];
+        PlayFabUserData.goldCurrencyCount = result.VirtualCurrency["AU"];
+
+
+        goldCurrencyCount.text = result.VirtualCurrency ["AU"].ToString();
         diamondCurrencyCount.text = result.VirtualCurrency["GM"].ToString();
 		bool hasEquipedWeapon = false;
 		foreach (ItemInstance i in result.Inventory) {

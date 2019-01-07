@@ -17,6 +17,8 @@ public class PlayFabUserData : MonoBehaviour {
     public static Dictionary<string, UserDataRecord> userData;
     public static Dictionary<string, object> userEntityData;
 
+    public static int goldCurrencyCount;
+    public static int diamondCurrencyCount;
 
     public static int lv = 0;
     public static int exp = 0;
