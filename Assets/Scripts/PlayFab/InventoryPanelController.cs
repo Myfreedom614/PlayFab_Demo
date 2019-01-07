@@ -73,8 +73,16 @@ public class InventoryPanelController : MonoBehaviour {
 			Text itemName = inventoryItems [j].transform.Find ("Name").GetComponent<Text>();
 			Text equip = inventoryItems [j].transform.Find ("Equip").GetComponent<Text>();
 			Button button = inventoryItems [j].transform.Find ("Button").GetComponent<Button>();
+            Text num = inventoryItems[j].transform.Find("Num").GetComponent<Text>();
 
-			itemName.text = items [i].DisplayName;
+            num.gameObject.SetActive(false);
+            if (items[i].RemainingUses.HasValue)
+            {
+                num.gameObject.SetActive(true);
+                num.text = items[i].RemainingUses.Value.ToString();
+            }
+
+            itemName.text = items [i].DisplayName;
 			if (PlayFabUserData.equipedWeapon == items [i].ItemClass) {
 				equip.gameObject.SetActive(true);
 				button.gameObject.SetActive (false);
@@ -82,39 +90,60 @@ public class InventoryPanelController : MonoBehaviour {
 				equip.gameObject.SetActive(false);
 				button.gameObject.SetActive (true);
 				button.onClick.RemoveAllListeners ();
-				button.onClick.AddListener (delegate {
-                    var item = items[itemNum];
-                    PlayFabUserData.equipedWeapon = item.ItemClass;
-                    UpdateUserDataRequest request = new UpdateUserDataRequest() { };
-                    request.Data = new Dictionary<string, string>();
-                    request.Data.Add("EquipedWeapon", item.ItemClass);
-                    PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
+				button.onClick.AddListener (
 
-                    SetObjectsRequest requestObject = new SetObjectsRequest();
-                    requestObject.Entity.Id = PlayFabAuthService.entityId;
-                    requestObject.Entity.Type = PlayFabAuthService.entityType;
-                    var dataObject = new Dictionary<string, object>()
+                    delegate {
+                        var item = items[itemNum];
+                        if (item.RemainingUses.HasValue)
                         {
-                            {"EquipedWeapon", item.ItemClass}
-                        };
-                    var dataList = new List<SetObject>()
+                            PlayFabClientAPI.ConsumeItem(
+                                new ConsumeItemRequest() { ItemInstanceId = item.ItemInstanceId,ConsumeCount = 1 },
+                                OnUpdateUserData, OnPlayFabError);
+                            
+                        }
+                        else
                         {
-                            new SetObject()
+                            PlayFabUserData.equipedWeapon = item.ItemClass;
+                            UpdateUserDataRequest request = new UpdateUserDataRequest() { };
+                            request.Data = new Dictionary<string, string>();
+                            request.Data.Add("EquipedWeapon", item.ItemClass);
+                            PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
+
+                            SetObjectsRequest requestObject = new SetObjectsRequest();
+                            requestObject.Entity.Id = PlayFabAuthService.entityId;
+                            requestObject.Entity.Type = PlayFabAuthService.entityType;
+                            var dataObject = new Dictionary<string, object>()
                             {
-                                ObjectName = "PlayerData",
-                                DataObject = dataObject
-                            },
-                        };
-                    requestObject.Objects = dataList;
-                    PlayFabDataAPI.SetObjects(requestObject, OnUpdateUserData, OnPlayFabError);
+                                {"EquipedWeapon", item.ItemClass}
+                            };
+                            var dataList = new List<SetObject>()
+                            {
+                                new SetObject()
+                                {
+                                    ObjectName = "PlayerData",
+                                    DataObject = dataObject
+                                },
+                            };
+                            requestObject.Objects = dataList;
+                            PlayFabDataAPI.SetObjects(requestObject, OnUpdateUserData, OnPlayFabError);
+                        }
+                    }
 
-                });
+                );
 			}
 			inventoryItems [j].SetActive (true);
 		}
 		for (; j < itemsPerPage; j++)
 			inventoryItems [j].SetActive (false);
 	}
+
+    void OnUpdateUserData(ConsumeItemResult result)
+    {
+        GetUserInventoryRequest request = new GetUserInventoryRequest();
+        PlayFabClientAPI.GetUserInventory(request, OnGetUserInventory, OnPlayFabError);
+        ShowItems();
+        Debug.Log("Item Consumed");
+    }
     void OnUpdateUserData(UpdateUserDataResult result)
     {
         ShowItems();

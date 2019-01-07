@@ -1,4 +1,24 @@
 
+
+handlers.SetupPlayerLeaderBoard = function (args:any,context: IPlayFabContext ) {
+  let request: PlayFabServerModels.UpdatePlayerStatisticsRequest = {
+    PlayFabId: context.playerProfile.PlayerId,
+    Statistics: [{
+      StatisticName: "TotalWin",
+      Value: Math.floor(Math.random()*100)+1
+  },{
+    StatisticName: "TotalKill",
+    Value: Math.floor(Math.random()*1000)+1
+  },{
+    StatisticName: "KillPerDeath",
+    Value: Math.floor(Math.random()*10)+1
+  }
+]
+  }
+
+  server.UpdatePlayerStatistics(request, )
+}
+
 handlers.ExchangeGold = function(args)
 {
   //函数的两个参数，DC表示消耗的钻石数，GC表示获得的金币数

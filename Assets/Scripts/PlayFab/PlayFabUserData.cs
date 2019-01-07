@@ -8,7 +8,7 @@ using PlayFab.DataModels;
 public class PlayFabUserData : MonoBehaviour {
 
 	public static string equipedWeapon="nor";
-	public static string catalogVersion = "GunWeapon";
+	public static string catalogVersion = "Weapon";
 
     public static string playFabId = "";
 	public static string username ="";

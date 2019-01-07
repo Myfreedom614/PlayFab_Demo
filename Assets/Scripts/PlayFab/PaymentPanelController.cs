@@ -16,10 +16,7 @@ public class PaymentPanelController : MonoBehaviour {
         ClickBuyGoldButton();
         processPanel.SetActive(false);
     }
-    public void ClickPaymentPanelButton()
-    {
-        paymentPanel.SetActive(true);
-    }
+
 
     public void ClickBuyGoldButton()
     {

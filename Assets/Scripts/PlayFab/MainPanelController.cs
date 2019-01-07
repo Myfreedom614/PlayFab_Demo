@@ -226,7 +226,7 @@ public class MainPanelController : MonoBehaviour{
     void OnGetAccountInfo(GetAccountInfoResult result)
     {
         PlayFabUserData.email = result.AccountInfo.PrivateInfo.Email;
-        PlayFabUserData.username = result.AccountInfo.Username;
+        PlayFabUserData.username = result.AccountInfo.TitleInfo.DisplayName;
         OnMessageResponse();
     }
 
@@ -263,6 +263,7 @@ public class MainPanelController : MonoBehaviour{
         achievementPanel.SetActive(false);
         roomPanel.SetActive(false);
         userMessagePanel.SetActive(false);
+        paymentPanel.SetActive(false);
     }
     
 	public void ClickLobbyButton(){
@@ -293,5 +294,10 @@ public class MainPanelController : MonoBehaviour{
     {
         disableAllPanel();
         userMessagePanel.SetActive(true);
+    }
+    public void ClickPaymentPanelButton()
+    {
+        disableAllPanel();
+        paymentPanel.SetActive(true);
     }
 }

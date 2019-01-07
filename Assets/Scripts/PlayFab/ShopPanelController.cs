@@ -59,12 +59,6 @@ public class ShopPanelController : MonoBehaviour
     void OnGetCatalogItems(GetCatalogItemsResult result)
     {
         List<CatalogItem> temp = result.Catalog;
-        //remove default weapon in store
-        for (int i = temp.Count - 1; i >= 0; i--)
-        {
-            if (temp[i].VirtualCurrencyPrices.ContainsKey("FR"))
-                temp.RemoveAt(i);
-        }
         shopItems = temp;
         itemsLength = temp.Count;
         currentPageNumber = 1;
@@ -101,17 +95,16 @@ public class ShopPanelController : MonoBehaviour
         {
             int itemNum = i;
             texts = shopItemsPanel[j].GetComponentsInChildren<Text>();
-            images = shopItemsPanel[j].GetComponentsInChildren<Image>();
             button = shopItemsPanel[j].GetComponentInChildren<Button>();
             texts[0].text = shopItems[i].DisplayName;
 
             if (shopItems[i].VirtualCurrencyPrices.ContainsKey("AU"))
             {
-                texts[1].text ="GC"+ shopItems[i].VirtualCurrencyPrices["AU"].ToString();
+                texts[1].text ="Gold"+ shopItems[i].VirtualCurrencyPrices["AU"].ToString();
             }
             else if (shopItems[i].VirtualCurrencyPrices.ContainsKey("GM"))
             {
-                texts[1].text ="DC"+ shopItems[i].VirtualCurrencyPrices["GM"].ToString();
+                texts[1].text ="Dia"+ shopItems[i].VirtualCurrencyPrices["GM"].ToString();
             }
             button.onClick.RemoveAllListeners();
 
@@ -119,7 +112,7 @@ public class ShopPanelController : MonoBehaviour
             bool hasItems = false;
             foreach (ItemInstance ii in userItems)
             {
-                if (ii.ItemClass == shopItems[i].ItemClass)
+                if (ii.ItemClass == shopItems[i].ItemClass && !shopItems[i].IsStackable)
                 {
                     hasItems = true;
                     break;
@@ -143,7 +136,7 @@ public class ShopPanelController : MonoBehaviour
                         PurchaseItemRequest request = new PurchaseItemRequest()
                         {
                             CatalogVersion = PlayFabUserData.catalogVersion,
-                            VirtualCurrency = "	AU",
+                            VirtualCurrency = "AU",
                             Price = (int)item.VirtualCurrencyPrices["AU"],
                             ItemId = item.ItemId
                         };
@@ -179,14 +172,14 @@ public class ShopPanelController : MonoBehaviour
 
     void OnGetUserInventoryPurchaseItem(GetUserInventoryResult result)
     {
-        goldCurrencyCount.text = result.VirtualCurrency["GC"].ToString();
-        diamondCurrencyCount.text = result.VirtualCurrency["DC"].ToString();
+        goldCurrencyCount.text = result.VirtualCurrency["AU"].ToString();
+        diamondCurrencyCount.text = result.VirtualCurrency["GM"].ToString();
         UserMessageLabel.text = "Purchase Success";
 
         userItems = result.Inventory;
         shopPanel.GetComponent<ShopPanelController>().ShowItems();
     }
-
+    
     void OnPlayFabPurchaseError(PlayFabError error)
     {
         Debug.LogError(error.ErrorDetails);

@@ -18,7 +18,7 @@ public class LeaderboardController : MonoBehaviour {
     public GameObject localUser;
 
 
-	private Dictionary<string,uint> leaderboard = new Dictionary<string, uint> ();
+	private Dictionary<string, Dictionary<uint, uint>> leaderboard = new Dictionary<string, Dictionary<uint,uint>>();
 	private string leaderboardType="";
     private Text[] localUserTexts;
 
@@ -50,7 +50,7 @@ public class LeaderboardController : MonoBehaviour {
         }
 
         var leaderboardRequest = new GetLeaderboardRequest() {
-            MaxResultsCount = 3,
+            MaxResultsCount = 100,
             StatisticName = "TotalKill",StartPosition=0,
             ProfileConstraints = new PlayerProfileViewConstraints()
                 {
@@ -82,7 +82,7 @@ public class LeaderboardController : MonoBehaviour {
 
         var leaderboardRequest = new GetLeaderboardRequest()
         {
-            MaxResultsCount = 3,
+            MaxResultsCount = 100,
             StatisticName = "KillPerDeath",
             StartPosition = 0,
             ProfileConstraints = new PlayerProfileViewConstraints()
@@ -115,7 +115,7 @@ public class LeaderboardController : MonoBehaviour {
 
         var leaderboardRequest = new GetLeaderboardRequest()
         {
-            MaxResultsCount = 3,
+            MaxResultsCount = 100,
             StatisticName = "TotalWin",
             StartPosition = 0,
             ProfileConstraints = new PlayerProfileViewConstraints()
@@ -131,11 +131,11 @@ public class LeaderboardController : MonoBehaviour {
 		foreach (PlayerLeaderboardEntry entry in result.Leaderboard) {
             if (entry.DisplayName == null)
             {
-                leaderboard.Add(entry.PlayFabId, (uint)entry.StatValue);
+                leaderboard.Add(entry.PlayFabId, new Dictionary<uint, uint> { { (uint)entry.Position, (uint)entry.StatValue } });
             }
             else
             {
-                leaderboard.Add(entry.DisplayName, (uint)entry.StatValue);
+                leaderboard.Add(entry.DisplayName, new Dictionary<uint, uint> { { (uint)entry.Position, (uint)entry.StatValue } });
             }
         }
 		SetLeadboard ();
@@ -146,20 +146,30 @@ public class LeaderboardController : MonoBehaviour {
 		leaderboardLoadingLabel.SetActive (false);
 		int i = 0;
         Text[] texts;
-		foreach (KeyValuePair<string,uint>kvp in leaderboard) {
-			texts = users [i].GetComponentsInChildren<Text> ();
-			texts [0].text = (i + 1).ToString();
-			texts [1].text = kvp.Key;
-			if (leaderboardType == "TotalKill" || leaderboardType == "TotalWin")
-				texts [2].text = leaderboardType+"："+kvp.Value.ToString ();
-			else if (leaderboardType == "KillPerDeath")
-				texts [2].text = leaderboardType + "：" + (kvp.Value / 10000.0f).ToString ("0.0");
+		foreach (KeyValuePair<string, Dictionary<uint, uint>> kvp in leaderboard) {
+
+            if (i < 3)
+            {
+                texts = users[i].GetComponentsInChildren<Text>();
+                texts[0].text = (i + 1).ToString();
+                texts[1].text = kvp.Key;
+                if (leaderboardType == "TotalKill" || leaderboardType == "TotalWin")
+                    texts[2].text = leaderboardType + "：" + kvp.Value[(uint)i].ToString();
+                else if (leaderboardType == "KillPerDeath")
+                    texts[2].text = leaderboardType + "：" + kvp.Value[(uint)i].ToString();
+
+                users[i].SetActive(true);
+
+            }
+
             if (kvp.Key == PlayFabUserData.username)
             {
-                localUserTexts[0].text = texts[0].text;
-                localUserTexts[2].text = texts[2].text;
+                localUserTexts[0].text = i.ToString();
+                if (leaderboardType == "TotalKill" || leaderboardType == "TotalWin")
+                    localUserTexts[2].text = leaderboardType + "：" + kvp.Value[(uint)i].ToString();
+                else if (leaderboardType == "KillPerDeath")
+                    localUserTexts[2].text = leaderboardType + "：" + kvp.Value[(uint)i].ToString();
             }
-            users [i].SetActive (true);
 			i++;
 		}
         localUser.SetActive(true);
