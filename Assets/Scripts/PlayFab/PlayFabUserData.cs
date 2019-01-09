@@ -14,8 +14,8 @@ public class PlayFabUserData : MonoBehaviour {
 	public static string username ="";
     public static string email = "";
 
-    public static Dictionary<string, UserDataRecord> userData;
     public static Dictionary<string, object> userEntityData;
+    public static Dictionary<string, bool> userReadonlyData;
 
     public static int goldCurrencyCount;
     public static int diamondCurrencyCount;
@@ -25,8 +25,8 @@ public class PlayFabUserData : MonoBehaviour {
 
 	public static int totalKill = 0;
 	public static int totalDeath = 0;
-	public static float killPerDeath = 0.0f;
+	public static int killPerDeath = 0;
 
 	public static int totalWin = 0;
-	public static int totalGame = 0;
+
 }

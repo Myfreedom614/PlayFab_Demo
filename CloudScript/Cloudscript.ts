@@ -1,5 +1,3 @@
-
-
 handlers.SetupPlayerLeaderBoard = function (args:any,context: IPlayFabContext ) {
   let request: PlayFabServerModels.UpdatePlayerStatisticsRequest = {
     PlayFabId: context.playerProfile.PlayerId,
@@ -19,90 +17,95 @@ handlers.SetupPlayerLeaderBoard = function (args:any,context: IPlayFabContext ) 
 }
 
 
-
 handlers.SetupPlayerData = function (args:any,context: IPlayFabContext ) {
   let request : PlayFabDataModels.SetObjectsRequest={
     Entity: server.GetUserAccountInfo({PlayFabId:context.playerProfile.PlayerId}).UserInfo.TitleInfo.TitlePlayerAccount,
     Objects:[{
-      ObjectName:"",
-      DataObject:""
-    },{
-      ObjectName:"",
-      DataObject:""
+      ObjectName:"PlayerData",
+      DataObject:{"LV": Math.floor(Math.random()*10)+1,
+                  "Exp": Math.floor(Math.random()*1000)+1,
+                  "EquipedWeapon": "weapon20"}
     }
-
     ]
   }
   entity.SetObjects(request)
 
   server.UpdateUserReadOnlyData({PlayFabId:context.playerProfile.PlayerId,Data:{
-    "Achievement1":"false",
-    "Achievement2":"false"
+    "Achievement":JSON.stringify({    
+    "Achievement0":false,
+    "Achievement1":false,
+    "Achievement2":false,
+    "Achievement3":false,
+    "Achievement4":false,
+    "Achievement5":false,
+    "Achievement6":false,
+    "Achievement7":false,
+    "Achievement8":false,
+    "Achievement9":false,
+    "Achievement10":false})
   },Permission: "Public"})
-  
+}
+
+handlers.GetAchievement = function(args:any,context: IPlayFabContext){
+  let titledata:object
+    titledata = JSON.parse(server.GetTitleData( {Keys:args}).Data[args])
+
+  let playSta:number = server.GetPlayerStatistics(
+    {
+      PlayFabId:currentPlayerId,
+      StatisticNames:[titledata["Description"]]
+    })
+    .Statistics[0]
+    .Value
+
+    
+  let result;
+  if (playSta>= titledata["Count"]) {
+    result = server.GrantItemsToUser({PlayFabId:currentPlayerId,ItemIds:["AU50Bundle"]}).ItemGrantResults[0].Result;
+    let AchievementName:string = args ;
+
+    let o =JSON.parse( server.GetUserReadOnlyData({PlayFabId: currentPlayerId}).Data["Achievement"].Value)
+
+      o[AchievementName] = true;
+      log.debug(JSON.stringify(o));
+    server.UpdateUserReadOnlyData({PlayFabId:currentPlayerId,Data:{
+      "Achievement":JSON.stringify(o)
+    },Permission: "Public"})
+  }else{
+    return {"Result":"flase"}
+  }
+  return {"Result":result}
 }
 
 handlers.ExchangeGold = function(args)
 {
-  var DCCost = args.DC;
-  var GCGet = args.GC;
+  let GMCost = 4;
+  let AUGet = 500;
   
-  var subtractDCResult = server.SubtractUserVirtualCurrency({
+  let subtractDCResult = server.SubtractUserVirtualCurrency({
     PlayFabId : currentPlayerId,
-    VirtualCurrency : "DC",
-    Amount : DCCost
+    VirtualCurrency : "GM",
+    Amount : GMCost
   });
-  var DCResult = subtractDCResult["Balance"];
+  let GMResult = subtractDCResult["Balance"];
   
-  var addGCResult = server.AddUserVirtualCurrency({
+  let addGCResult = server.AddUserVirtualCurrency({
     PlayFabId : currentPlayerId,
-    VirtualCurrency : "GC",
-    Amount : GCGet
+    VirtualCurrency : "AU",
+    Amount : AUGet
   });
-  var GCResult = addGCResult["Balance"];
+  let GCResult = addGCResult["Balance"];
   
-  return { diamondCurrencyResult : DCResult,
+  return { diamondCurrencyResult : GMResult,
         goldCurrencyResult : GCResult};
 }
 
-handlers.GetAchievement = function(args:any,context: IPlayFabContext){
-
-}
-
-handlers.ValidatePurchaseCode = function (args)
+handlers.PurchaseDiamond = function (args)
 {
-  var codeKey = "";
-  var diamondPrice = 0;
-  var result = false;
-  switch(args)
-  {
-    case '0':
-      codeKey = "PurchaseCode300";
-      diamondPrice = 30;
-      break;
-   	case '1':
-      codeKey = "PurchaseCode980";
-      diamondPrice = 90;
-      break;
-   	case '2':
-      codeKey = "PurchaseCode1980";
-      diamondPrice = 180;
-      break;
-   	case '3':
-      codeKey = "PurchaseCode3280";
-      diamondPrice = 300;
-      break;
-  }
-
-  var finalDia = -1;
-  var addDia = parseInt(codeKey.substr(12)); //截取数字
-  var addResult = server.AddUserVirtualCurrency({
+  let GMResult =  server.AddUserVirtualCurrency({
     PlayFabId : currentPlayerId,
-    VirtualCurrency : "DC" ,
-    Amount : addDia
-  });
-
-  return { purchaseResult : result ,
-        newDiamondAmount : finalDia };
-  
+    VirtualCurrency : "GM",
+    Amount : Number.parseInt(args)
+  }).Balance;
+  return { diamondCurrencyResult : GMResult};
 }

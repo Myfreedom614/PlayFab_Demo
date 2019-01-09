@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 348}
   m_MaxSize: {x: 22012, y: 10024}
   vertical: 0
-  controlID: 163
+  controlID: 31
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 348}
   m_MaxSize: {x: 4002, y: 8048}
   vertical: 1
-  controlID: 127
+  controlID: 44
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -187,8 +187,8 @@ MonoBehaviour:
     y: 0
     width: 232
     height: 947
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 204, y: 224}
+  m_MaxSize: {x: 4004, y: 4024}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -239,8 +239,8 @@ MonoBehaviour:
     y: 0
     width: 552
     height: 947
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 74}
+  m_MaxSize: {x: 4002, y: 4024}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -267,8 +267,8 @@ MonoBehaviour:
     y: 461
     width: 477
     height: 486
-  m_MinSize: {x: 100, y: 100}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 102, y: 124}
+  m_MaxSize: {x: 4002, y: 4024}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 21}
@@ -478,9 +478,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: d2fbffff121300001e130000241300007213000086130000781400009a14000002150000b2150000fa15000076160000881600000e1700003e170000cc170000361900004c190000321a0000fc1a0000881b0000941b0000101c00002c1c00004e1c0000d61c0000a01d0000d41d0000301e0000
+      m_SelectedIDs: 94190000
+      m_LastClickedID: 6548
+      m_ExpandedIDs: d2fbffff421300005413000068130000a2130000021400004414000058140000a8140000f014000096150000a2150000c4160000d21600002417000032170000721800007c19000094190000621a00000a1b00002c1b0000c81b00005c1c0000141e0000601e0000fe1e0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -577,19 +577,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/PlayFab
+    - Assets/PlayFabEditorExtensions/Editor/Scripts/PlayFabEditorSDK
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/PlayFab
+  - Assets/PlayFabEditorExtensions/Editor/Scripts/PlayFabEditorSDK
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\v-here\Documents\PlayFab_Demo
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 146}
-    m_SelectedIDs: f4100000
-    m_LastClickedID: 4340
+    m_SelectedIDs: fa100000
+    m_LastClickedID: 4346
     m_ExpandedIDs: 000000008e0d0000980d0000c60d0000d40d0000740e0000760e00007c0e0000d40e0000ee0e00004a0f0000860f0000fe0f0000121000009c10000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0

@@ -107,12 +107,12 @@ public class AchievementPanelController : MonoBehaviour {
             AchievementItemData = PlayFabSimpleJson.DeserializeObject<Dictionary<string, string>>(achievementData[achievementName]);
             texts[0].text = AchievementItemData["Name"];
             texts[1].text = AchievementItemData["Description"] + "：" + AchievementItemData["Count"];
-            texts[2].text = AchievementItemData["Reward"];
-            int point = int.Parse(AchievementItemData["Reward"]);
+            texts[2].text = AchievementItemData["AU"];
+            int gold = int.Parse(AchievementItemData["AU"]);
 
-            if (PlayFabUserData.userData.ContainsKey(achievementName))
+            if (PlayFabUserData.userReadonlyData.ContainsKey(achievementName) && PlayFabUserData.userReadonlyData[achievementName] == true)
             {
-                texts[3].text = "Received";      
+                texts[3].text = "Received";
                 button.interactable = false;
             }
             else if((AchievementItemData["Description"] == "TotalKill" && PlayFabUserData.totalKill >= int.Parse(AchievementItemData["Count"])) 
@@ -123,7 +123,7 @@ public class AchievementPanelController : MonoBehaviour {
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(delegate ()
                 {
-                    GetAchievement(achievementName,point); 
+                    GetAchievement(achievementName,gold); 
                 });
             }
             else
@@ -138,34 +138,47 @@ public class AchievementPanelController : MonoBehaviour {
             achievementItems[j].SetActive(false);
     }
 
-    void GetAchievement(string name,int point)  
+    void GetAchievement(string name,int gold)  
     {
 
         processingWindow.SetActive(true);
 
-        PlayFabClientAPI.WritePlayerEvent(new WriteClientPlayerEventRequest()
-        {
-            Body = new Dictionary<string, object>() {
-                { "Achievement", name}
+        PlayFabClientAPI.ExecuteCloudScript(
+            new ExecuteCloudScriptRequest()
+            {
+                FunctionName = "GetAchievement",
+                FunctionParameter = name,
+                GeneratePlayStreamEvent = true
             },
-            EventName = "player_get_achievement"
-        },
-        result => 
-            PlayFabClientAPI.UpdateUserData(
-                new UpdateUserDataRequest() { Data = new Dictionary<string, string> { { name, "true" } } },
-            OnUpdateUserData,
-            OnPlayFabError),
-        OnPlayFabError);
+            OnExeCS,
+            OnPlayFabError);
     }
 
-    void OnUpdateUserData(UpdateUserDataResult result)
+    void OnExeCS(ExecuteCloudScriptResult result)
     {
+
         GetUserDataRequest request = new GetUserDataRequest();
-        PlayFabClientAPI.GetUserData(request, OnGetUserData, OnPlayFabError);
+        PlayFabClientAPI.GetUserReadOnlyData(request, OnGetUserData, OnPlayFabError);
+
     }
 
     void OnGetUserData(GetUserDataResult result) {
-        PlayFabUserData.userData = result.Data;
+        if (result.Data.ContainsKey("Achievement"))
+        {
+            PlayFabUserData.userReadonlyData = PlayFabSimpleJson.DeserializeObject<Dictionary<string, bool>>(result.Data["Achievement"].Value);
+        }
+        GetUserInventoryRequest getUserInventoryRequest = new GetUserInventoryRequest();
+
+        PlayFabClientAPI.GetUserInventory(getUserInventoryRequest, OnGetUserInventory, OnPlayFabError);
+
+    }
+    void OnGetUserInventory(GetUserInventoryResult result)
+    {
+        Debug.Log("User Inventory Loaded");
+
+        PlayFabUserData.goldCurrencyCount = result.VirtualCurrency["AU"];
+
+        goldCurrencyCount.text = result.VirtualCurrency["AU"].ToString();
         processingWindow.SetActive(false);
         ShowAchievementItems();
     }

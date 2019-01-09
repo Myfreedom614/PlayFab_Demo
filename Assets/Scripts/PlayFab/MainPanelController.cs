@@ -32,7 +32,7 @@ public class MainPanelController : MonoBehaviour{
     public Text diamondCurrencyCount;
     //public GameObject pageSwitchButton;
 
-    int requestNum = 4;
+    int requestNum = 7;
 	void OnEnable(){
 
         //dataLoadingWindow.SetActive (true);
@@ -58,10 +58,8 @@ public class MainPanelController : MonoBehaviour{
         if (paymentPanel != null)
             paymentPanel.SetActive(false);
 
-        requestNum = 4;
-
         GetUserDataRequest getUserDataRequest = new GetUserDataRequest();
-        PlayFabClientAPI.GetUserData(getUserDataRequest, OnGetUserData, OnPlayFabError);
+        //PlayFabClientAPI.GetUserData(getUserDataRequest, OnGetUserData, OnPlayFabError);
 
         var getUserEntityRequest = new GetObjectsRequest { Entity = new PlayFab.DataModels.EntityKey { Id = PlayFabAuthService.entityId, Type = PlayFabAuthService.entityType } };
         PlayFabDataAPI.GetObjects(getUserEntityRequest, OnGetUserEntityData, OnPlayFabError);
@@ -79,54 +77,12 @@ public class MainPanelController : MonoBehaviour{
         PlayFabClientAPI.GetAccountInfo(getAccountInfoRequest, OnGetAccountInfo, OnPlayFabError);
 
         GetTitleDataRequest getTitleDataRequest = new GetTitleDataRequest();
+
         PlayFabClientAPI.GetTitleData(getTitleDataRequest, OnGetTitleData, OnPlayFabError);
-
+        PlayFabClientAPI.GetPlayerStatistics(new GetPlayerStatisticsRequest (){ StatisticNames= new List<string>(){ "TotalWin", "TotalKill", "KillPerDeath" } },OnGetPlayerStatistics, OnPlayFabError);
+        PlayFabClientAPI.GetUserReadOnlyData(getUserDataRequest, OnGetUserReadOnlyData, OnPlayFabError);
     }
 
-	void OnGetUserData(GetUserDataResult result){
-		Debug.Log ("User Data Loaded");
-        PlayFabUserData.userData = result.Data;
-
-        if (result.Data.ContainsKey("LV"))
-            PlayFabUserData.lv = int.Parse(result.Data["LV"].Value);
-        else
-            PlayFabUserData.lv = 1;
-        lvValue.text = PlayFabUserData.lv.ToString();
-        if (result.Data.ContainsKey("Exp"))
-            PlayFabUserData.exp = int.Parse(result.Data["Exp"].Value);
-        else PlayFabUserData.exp = 0;
-
-		if (result.Data.ContainsKey ("TotalKill"))
-			PlayFabUserData.totalKill = int.Parse (result.Data ["TotalKill"].Value);
-		else
-			PlayFabUserData.totalKill = 0;
-		if (result.Data.ContainsKey ("TotalDeath"))
-			PlayFabUserData.totalDeath = int.Parse (result.Data ["TotalDeath"].Value);
-		else
-			PlayFabUserData.totalDeath = 0;
-		if (PlayFabUserData.totalDeath == 0)
-			PlayFabUserData.killPerDeath = (float)PlayFabUserData.totalKill*100.0f;
-		else
-			PlayFabUserData.killPerDeath = PlayFabUserData.totalKill * 100.0f / PlayFabUserData.totalDeath;
-
-		if (result.Data.ContainsKey ("TotalWin"))
-			PlayFabUserData.totalWin = int.Parse (result.Data ["TotalWin"].Value);
-		else
-			PlayFabUserData.totalWin = 0;
-		if (result.Data.ContainsKey ("TotalGame"))
-			PlayFabUserData.totalGame = int.Parse (result.Data ["TotalGame"].Value);
-		else
-			PlayFabUserData.totalGame = 0;
-
-
-        if (result.Data.ContainsKey ("EquipedWeapon"))
-			PlayFabUserData.equipedWeapon = result.Data["EquipedWeapon"].Value;
-		else
-			PlayFabUserData.equipedWeapon = "nor";
-        
-        GetUserInventoryRequest getUserInventoryRequest = new GetUserInventoryRequest();
-        PlayFabClientAPI.GetUserInventory(getUserInventoryRequest, OnGetUserInventory, OnPlayFabError);
-    }
 
     void OnGetUserEntityData(GetObjectsResponse result)
     {
@@ -134,47 +90,61 @@ public class MainPanelController : MonoBehaviour{
         var dataObject = PlayFab.Json.PlayFabSimpleJson.DeserializeObject<Dictionary<string, object>>(result.Objects["PlayerData"].DataObject.ToString());
         PlayFabUserData.userEntityData = dataObject;
 
-        if (dataObject.ContainsKey("LV"))
+        if (dataObject.ContainsKey("LV")) { 
             PlayFabUserData.lv = int.Parse(dataObject["LV"].ToString());
+            lvValue.text = dataObject["LV"].ToString();
+        }
+
         else
             PlayFabUserData.lv = 1;
         lvValue.text = PlayFabUserData.lv.ToString();
+
         if (dataObject.ContainsKey("Exp"))
-            PlayFabUserData.exp = int.Parse(result.Objects["Exp"].ToString());
+            PlayFabUserData.exp = int.Parse(dataObject["Exp"].ToString());
         else PlayFabUserData.exp = 0;
 
-        if (dataObject.ContainsKey("TotalKill"))
-            PlayFabUserData.totalKill = int.Parse(result.Objects["TotalKill"].ToString());
-        else
-            PlayFabUserData.totalKill = 0;
-        if (dataObject.ContainsKey("TotalDeath"))
-            PlayFabUserData.totalDeath = int.Parse(result.Objects["TotalDeath"].ToString());
-        else
-            PlayFabUserData.totalDeath = 0;
-        if (PlayFabUserData.totalDeath == 0)
-            PlayFabUserData.killPerDeath = (float)PlayFabUserData.totalKill * 100.0f;
-        else
-            PlayFabUserData.killPerDeath = PlayFabUserData.totalKill * 100.0f / PlayFabUserData.totalDeath;
-
-        if (dataObject.ContainsKey("TotalWin"))
-            PlayFabUserData.totalWin = int.Parse(result.Objects["TotalWin"].ToString());
-        else
-            PlayFabUserData.totalWin = 0;
-        if (dataObject.ContainsKey("TotalGame"))
-            PlayFabUserData.totalGame = int.Parse(result.Objects["TotalGame"].ToString());
-        else
-            PlayFabUserData.totalGame = 0;
 
         if (dataObject.ContainsKey("EquipedWeapon"))
-            PlayFabUserData.equipedWeapon = result.Objects["EquipedWeapon"].ToString();
+            PlayFabUserData.equipedWeapon = dataObject["EquipedWeapon"].ToString();
         else
-            PlayFabUserData.equipedWeapon = "nor";
+            PlayFabUserData.equipedWeapon = "weapon20";
 
         GetUserInventoryRequest getUserInventoryRequest = new GetUserInventoryRequest();
         PlayFabClientAPI.GetUserInventory(getUserInventoryRequest, OnGetUserInventory, OnPlayFabError);
+        OnMessageResponse();
+
     }
 
+    void OnGetUserReadOnlyData(GetUserDataResult result)
+    {
+        if (result.Data.ContainsKey("Achievement"))
+        {
+            PlayFabUserData.userReadonlyData = PlayFab.Json.PlayFabSimpleJson.DeserializeObject<Dictionary<string, bool>>(result.Data["Achievement"].Value);
+        }
+        OnMessageResponse();
 
+    }
+
+    void OnGetPlayerStatistics(GetPlayerStatisticsResult result)
+    {
+        foreach (var Statistic in result.Statistics)
+        {
+            if (Statistic.StatisticName == "TotalWin")
+            {
+                PlayFabUserData.totalWin = Statistic.Value;
+            }
+            else if(Statistic.StatisticName == "TotalKill")
+            {
+                PlayFabUserData.totalKill = Statistic.Value;
+            }
+            else
+            {
+                PlayFabUserData.killPerDeath = Statistic.Value;
+            }
+        }
+        OnMessageResponse();
+
+    }
     void OnGetUserInventory(GetUserInventoryResult result){
         Debug.Log("User Inventory Loaded");
 		if (result.VirtualCurrency.Count == 0) {
@@ -187,27 +157,6 @@ public class MainPanelController : MonoBehaviour{
 
         goldCurrencyCount.text = result.VirtualCurrency ["AU"].ToString();
         diamondCurrencyCount.text = result.VirtualCurrency["GM"].ToString();
-		bool hasEquipedWeapon = false;
-		foreach (ItemInstance i in result.Inventory) {
-			if (i.ItemClass == PlayFabUserData.equipedWeapon) {
-				hasEquipedWeapon = true;
-				break;
-			}
-		}
-        if (!hasEquipedWeapon)
-        {
-            PlayFabUserData.equipedWeapon = "nor";
-
-            UpdateUserDataRequest request = new UpdateUserDataRequest();
-            request.Data = new Dictionary<string, string>();
-            request.Data.Add("EquipedWeapon", PlayFabUserData.equipedWeapon);
-            PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
-        }
-        else
-        {
-            OnMessageResponse();
-            Debug.Log("User Data Saved");
-        }
 
         OnMessageResponse();
 
@@ -227,6 +176,7 @@ public class MainPanelController : MonoBehaviour{
     {
         PlayFabUserData.email = result.AccountInfo.PrivateInfo.Email;
         PlayFabUserData.username = result.AccountInfo.TitleInfo.DisplayName;
+        usernameText.text = result.AccountInfo.TitleInfo.DisplayName;
         OnMessageResponse();
     }
 
