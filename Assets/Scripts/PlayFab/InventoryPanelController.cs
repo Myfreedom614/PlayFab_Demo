@@ -112,16 +112,15 @@ public class InventoryPanelController : MonoBehaviour {
                             SetObjectsRequest requestObject = new SetObjectsRequest() { Entity = new EntityKey(), Objects = new List<SetObject>() };
                             requestObject.Entity.Id = PlayFabAuthService.entityId;
                             requestObject.Entity.Type = PlayFabAuthService.entityType;
-                            var dataObject = new Dictionary<string, object>()
-                            {
-                                {"EquipedWeapon", item.ItemClass}
-                            };
+
+                            PlayFabUserData.userEntityData["EquipedWeapon"] = item.ItemClass;
+
                             var dataList = new List<SetObject>()
                             {
                                 new SetObject()
                                 {
                                     ObjectName = "PlayerData",
-                                    DataObject = dataObject
+                                    DataObject = PlayFabUserData.userEntityData
                                 },
                             };
                             requestObject.Objects = dataList;

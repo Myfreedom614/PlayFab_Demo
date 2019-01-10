@@ -34,12 +34,6 @@ public class MainPanelController : MonoBehaviour{
 
     int requestNum = 7;
 	void OnEnable(){
-
-        //dataLoadingWindow.SetActive (true);
-		userMessage.SetActive (false);
-        currency.SetActive(false);
-        //pageSwitchButton.SetActive(false);
-
         if (lobbyPanel != null)
 			lobbyPanel.SetActive (true);
 		if (shopPanel != null)
@@ -196,10 +190,6 @@ public class MainPanelController : MonoBehaviour{
         requestNum--;
         if (requestNum == 0)
         {
-            //dataLoadingWindow.SetActive(false);
-            userMessage.SetActive(true);
-            currency.SetActive(true);
-            //pageSwitchButton.SetActive(true);
             lobbyPanel.SetActive(true);
         }
     }

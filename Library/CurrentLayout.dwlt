@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 348}
   m_MaxSize: {x: 22012, y: 10024}
   vertical: 0
-  controlID: 63
+  controlID: 159
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 348}
   m_MaxSize: {x: 4002, y: 8048}
   vertical: 1
-  controlID: 44
+  controlID: 13
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -478,23 +478,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: fe7d0000
-      m_LastClickedID: 32254
-      m_ExpandedIDs: c2f4ffffdef4ffff30f7ffff92f8ffffaef8fffffcfaffffd2fbffff527f00008e860000a8890000
+      m_SelectedIDs: 54130000
+      m_LastClickedID: 4948
+      m_ExpandedIDs: d2fbffff541300006813000058140000a8140000c416000024170000721800001c1c0000fe1e0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: 
-        m_OriginalName: 
+        m_Name: UserMessageBackground
+        m_OriginalName: UserMessageBackground
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 0
+        m_UserData: 5828
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 11
+        m_OriginalEventType: 0
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 8}
       m_SearchString: 
@@ -577,19 +577,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Photon/PhotonUnityNetworking/Demos
+    - Assets/Scripts/PlayFab
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Photon/PhotonUnityNetworking/Demos
+  - Assets/Scripts/PlayFab
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\v-here\Documents\PlayFab_Demo
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 146}
-    m_SelectedIDs: 0a110000
-    m_LastClickedID: 4362
+    m_SelectedIDs: f4100000
+    m_LastClickedID: 4340
     m_ExpandedIDs: 000000008e0d0000980d0000c60d0000d40d0000740e0000760e00007c0e0000d40e0000ee0e00004a0f0000860f0000fe0f0000121000009c10000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -645,7 +645,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: acb200006ab40000a46d0100dc910000f20500003eea00000000000058830000cabe000062050000f43b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
