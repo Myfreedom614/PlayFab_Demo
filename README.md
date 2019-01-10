@@ -1,7 +1,7 @@
 # PlayFab_Demo
 
 ## Demo illustrates:
-  * Accounts uses Email or lDevice ID Authentication
+  * Accounts uses Email or Device ID Authentication
   * Example of how to work with Photon PUN
   * Showcase most of the primary functions of Playfab in Unity.
 
