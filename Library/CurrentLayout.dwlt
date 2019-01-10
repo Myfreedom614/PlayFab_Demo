@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 917, y: 348}
   m_MaxSize: {x: 22012, y: 10024}
   vertical: 0
-  controlID: 31
+  controlID: 63
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 348}
   m_MaxSize: {x: 4002, y: 8048}
   vertical: 1
-  controlID: 77
+  controlID: 44
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -478,9 +478,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 5e150000
-      m_LastClickedID: 5470
-      m_ExpandedIDs: d2fbffff541300000214000078140000a814000096150000c416000032170000fe180000941900000a1b0000fe1e0000
+      m_SelectedIDs: fe7d0000
+      m_LastClickedID: 32254
+      m_ExpandedIDs: c2f4ffffdef4ffff30f7ffff92f8ffffaef8fffffcfaffffd2fbffff527f00008e860000a8890000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -577,19 +577,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/PlayFab
+    - Assets/Photon/PhotonUnityNetworking/Demos
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/PlayFab
+  - Assets/Photon/PhotonUnityNetworking/Demos
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\v-here\Documents\PlayFab_Demo
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 146}
-    m_SelectedIDs: f4100000
-    m_LastClickedID: 4340
+    m_SelectedIDs: 0a110000
+    m_LastClickedID: 4362
     m_ExpandedIDs: 000000008e0d0000980d0000c60d0000d40d0000740e0000760e00007c0e0000d40e0000ee0e00004a0f0000860f0000fe0f0000121000009c10000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -645,7 +645,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: acb200006ab40000a46d0100dc910000f20500003eea00000000000058830000cabe000062050000f43b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -702,17 +702,17 @@ MonoBehaviour:
   m_MaximizeOnPlay: 0
   m_Gizmos: 0
   m_Stats: 0
-  m_SelectedSizes: 06000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_SelectedSizes: 02000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_TargetDisplay: 0
   m_ZoomArea:
     m_HRangeLocked: 0
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -512
-    m_HBaseRangeMax: 512
-    m_VBaseRangeMin: -384
-    m_VBaseRangeMax: 384
+    m_HBaseRangeMin: -282.5
+    m_HBaseRangeMax: 282.5
+    m_VBaseRangeMin: -212
+    m_VBaseRangeMax: 212
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -732,7 +732,7 @@ MonoBehaviour:
       y: 17
       width: 658
       height: 424
-    m_Scale: {x: 0.5520833, y: 0.5520833}
+    m_Scale: {x: 1, y: 1}
     m_Translation: {x: 329, y: 212}
     m_MarginLeft: 0
     m_MarginRight: 0
@@ -740,12 +740,12 @@ MonoBehaviour:
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -595.92456
-      y: -384
-      width: 1191.8491
-      height: 768
+      x: -329
+      y: -212
+      width: 658
+      height: 424
     m_MinimalGUI: 1
-  m_defaultScale: 0.5520833
+  m_defaultScale: 1
   m_TargetTexture: {fileID: 0}
   m_CurrentColorSpace: 0
   m_LastWindowPixelSize: {x: 658, y: 441}
