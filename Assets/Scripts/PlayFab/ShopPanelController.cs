@@ -11,7 +11,6 @@ public class ShopPanelController : MonoBehaviour
     public GameObject roomPanel;
     public GameObject shopPanel;
     public GameObject shopLoadingWindow;
-
     public Text goldCurrencyCount;
     public Text diamondCurrencyCount;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.DataModels;
-
+using EntityKey = PlayFab.DataModels.EntityKey;
 
 public class InventoryPanelController : MonoBehaviour {
 
@@ -109,7 +109,7 @@ public class InventoryPanelController : MonoBehaviour {
                             request.Data.Add("EquipedWeapon", item.ItemClass);
                             PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
 
-                            SetObjectsRequest requestObject = new SetObjectsRequest();
+                            SetObjectsRequest requestObject = new SetObjectsRequest() { Entity = new EntityKey(), Objects = new List<SetObject>() };
                             requestObject.Entity.Id = PlayFabAuthService.entityId;
                             requestObject.Entity.Type = PlayFabAuthService.entityType;
                             var dataObject = new Dictionary<string, object>()

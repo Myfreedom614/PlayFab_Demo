@@ -12,6 +12,9 @@ public class UserMessagePanelController : MonoBehaviour {
     public Text currentRank;
     public Text nextRank;
 
+    public Button backButton;
+
+
     public Slider expSlider;
     public Text expText;
 
@@ -26,31 +29,20 @@ public class UserMessagePanelController : MonoBehaviour {
         modifyPasswordLabel.text = "";
         processingWindow.SetActive(false);
 
-        userId.text = "Player ID："+PlayFabUserData.playFabId;    
+        userId.text = "Player ID："+PlayFabAuthService.PlayFabId;    
 
-        currentRank.text = GameInfo.levelRankNames[PlayFabUserData.lv - 1];
-        if (PlayFabUserData.lv >= GameInfo.levelRankNames.Length)
-            nextRank.text = "";
-        else nextRank.text = GameInfo.levelRankNames[PlayFabUserData.lv];
+        currentRank.text = PlayFabUserData.lv.ToString();
+        nextRank.text = (PlayFabUserData.lv + 1).ToString();
 
-        if (PlayFabUserData.lv < GameInfo.levelExps.Length)
-        {
-            expSlider.minValue = 0;
-            expSlider.maxValue = GameInfo.levelExps[PlayFabUserData.lv - 1];
-            expSlider.value = PlayFabUserData.exp;
-            expText.text = PlayFabUserData.exp.ToString() + "/" + GameInfo.levelExps[PlayFabUserData.lv - 1].ToString();
-        }
-        else
-        {
-            expSlider.minValue = 0;
-            expSlider.maxValue = 1;
-            expSlider.value = 1;
-            expText.text = PlayFabUserData.exp.ToString()+"(Full Level)";
-        }
+
+        expSlider.minValue = 0;
+        expSlider.maxValue = 1000;
+        expSlider.value = PlayFabUserData.exp;
+        expText.text = PlayFabUserData.exp.ToString() + "/ 1000" ;
 
         totalWin.text = "Total Win：" + PlayFabUserData.totalWin.ToString();
         totalKill.text = "Total Kill：" + PlayFabUserData.totalKill.ToString();
-        killPerDeath.text = "Kill Per Death：" + (PlayFabUserData.killPerDeath / 100).ToString("0.0");
+        killPerDeath.text = "Kill Per Death：" + PlayFabUserData.killPerDeath.ToString();
     }
 
     public void ClickModifyPasswordButton()
@@ -86,5 +78,7 @@ public class UserMessagePanelController : MonoBehaviour {
     {
         Photon.Pun.PhotonNetwork.Disconnect();
         PlayFabAuthenticationAPI.ForgetAllCredentials();
-    }
+        backButton.onClick.Invoke();
+
+}
 }

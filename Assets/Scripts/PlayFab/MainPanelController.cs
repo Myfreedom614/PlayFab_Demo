@@ -72,7 +72,7 @@ public class MainPanelController : MonoBehaviour{
 
         GetAccountInfoRequest getAccountInfoRequest = new GetAccountInfoRequest()
         {
-            PlayFabId = PlayFabUserData.playFabId
+            PlayFabId = PlayFabAuthService.PlayFabId
         };
         PlayFabClientAPI.GetAccountInfo(getAccountInfoRequest, OnGetAccountInfo, OnPlayFabError);
 
