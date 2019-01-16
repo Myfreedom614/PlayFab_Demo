@@ -58,14 +58,14 @@ handlers.GetAchievement = function(args:any,context: IPlayFabContext){
     .Statistics[0]
     .Value
 
+  let o =JSON.parse( server.GetUserReadOnlyData({PlayFabId: currentPlayerId}).Data["Achievement"].Value)
+
+  let playAchSta:boolean = o[args]
     
   let result;
-  if (playSta>= titledata["Count"]) {
+  if (playSta>= titledata["Count"] && playAchSta == false) {
     result = server.GrantItemsToUser({PlayFabId:currentPlayerId,ItemIds:["AU50Bundle"]}).ItemGrantResults[0].Result;
     let AchievementName:string = args ;
-
-    let o =JSON.parse( server.GetUserReadOnlyData({PlayFabId: currentPlayerId}).Data["Achievement"].Value)
-
       o[AchievementName] = true;
       log.debug(JSON.stringify(o));
     server.UpdateUserReadOnlyData({PlayFabId:currentPlayerId,Data:{

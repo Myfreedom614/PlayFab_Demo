@@ -103,11 +103,6 @@ public class InventoryPanelController : MonoBehaviour {
                         }
                         else
                         {
-                            PlayFabUserData.equipedWeapon = item.ItemClass;
-                            UpdateUserDataRequest request = new UpdateUserDataRequest() { };
-                            request.Data = new Dictionary<string, string>();
-                            request.Data.Add("EquipedWeapon", item.ItemClass);
-                            PlayFabClientAPI.UpdateUserData(request, OnUpdateUserData, OnPlayFabError);
 
                             SetObjectsRequest requestObject = new SetObjectsRequest() { Entity = new EntityKey(), Objects = new List<SetObject>() };
                             requestObject.Entity.Id = PlayFabAuthService.entityId;

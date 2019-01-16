@@ -53,7 +53,6 @@ public class MainPanelController : MonoBehaviour{
             paymentPanel.SetActive(false);
 
         GetUserDataRequest getUserDataRequest = new GetUserDataRequest();
-        //PlayFabClientAPI.GetUserData(getUserDataRequest, OnGetUserData, OnPlayFabError);
 
         var getUserEntityRequest = new GetObjectsRequest { Entity = new PlayFab.DataModels.EntityKey { Id = PlayFabAuthService.entityId, Type = PlayFabAuthService.entityType } };
         PlayFabDataAPI.GetObjects(getUserEntityRequest, OnGetUserEntityData, OnPlayFabError);

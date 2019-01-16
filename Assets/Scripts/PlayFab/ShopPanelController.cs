@@ -88,7 +88,6 @@ public class ShopPanelController : MonoBehaviour
         else
             end = start + itemsPerPage;
         Text[] texts;
-        Image[] images;
         Button button;
         for (i = start, j = 0; i < end; i++, j++)
         {
