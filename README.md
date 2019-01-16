@@ -1,14 +1,5 @@
 # PlayFab_Demo
 
-<<<<<<< HEAD
-This repository is base on [PlayFab_Tanks](https://github.com/Rockiez/PlayFab_Tanks) and is showcasing how to build modern live-game systems driven by PlayFab's back-end technology.
-=======
-## Demo illustrates:
-  * Accounts uses Email or Device ID Authentication
-  * Example of how to work with Photon PUN
-  * Showcase most of the primary functions of Playfab in Unity.
->>>>>>> cc2e720a88f5251860ae75881cc8df534b064cf7
-
 ## Demo illustrates:
   * Unified Player Profile - Accounts uses Email or Device ID Authentication
   * Inventory Management - 
