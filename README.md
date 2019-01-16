@@ -1,5 +1,7 @@
 # PlayFab_Demo
 
+This repository is base on [PlayFab_Tanks](https://github.com/Rockiez/PlayFab_Tanks) and is showcasing how to build modern live-game systems driven by PlayFab's back-end technology.
+
 ## Demo illustrates:
   * Unified Player Profile - Accounts uses Email or Device ID Authentication
   * Inventory Management - 
