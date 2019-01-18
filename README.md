@@ -4,13 +4,13 @@ This repository is base on [PlayFab_Tanks](https://github.com/Rockiez/PlayFab_Ta
 
 ## Demo illustrates:
   * Unified Player Profile - Accounts uses Email or Device ID Authentication
-  * Inventory Management - 
   * Dynamic Gameplay - Drive client behaviors using TitleData
   * Virtual Items, Currencies, and Stores - Configured via PlayFab's Game Manager
   * Statistics Tracking - Used to drive Achievements and real-time leaderboards
   * Push Notifications - for re-engagement campaigns and special offers
   * Cloud-hosted Logic - Cloud Script methods that call a variety of protected APIs
   * Lobby and matchmaking - Example of how to work with Photon PUN
+  * Inventory Management - Browse and equip/consume item.
 
 ### Images
 
@@ -75,7 +75,10 @@ These instructions describe how to set up your own personalized back-end for the
 5. Ensure that your clients are allowed to post player statistics. 
 * note: this would not be a good idea if this was a competitive game.
 6. Navigate to Actomation then Rules, click New Rule and setup as picture below.
-![payment](https://github.com/Rockiez/PlayFab_Demo/raw/master/image/Rule.jpg)
+![Rule](https://github.com/Rockiez/PlayFab_Demo/raw/master/image/Rule.jpg)
+7. When have some users in your title, you can create Scheduled Tasks to execute some setup method in CloudScript for each user.You can refer to the following figure to configure that.
+![ScheduledTask](https://github.com/Rockiez/PlayFab_Demo/raw/master/image/ScheduledTask.jpg)
+
 
 ### Client Setup:
 
