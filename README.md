@@ -68,13 +68,14 @@ These instructions describe how to set up your own personalized back-end for the
 2. Download  [UploadGui](https://github.com/Rockiez/UploadGui),this tool has a simple and intuitive GUI interface and designs around to make it easier for user to upload the configuration files to the PlayFab server to setup your new title.
 
 ### Configure for your new title
-1. You need to read readme.md of UploadGui and follow it to upload configuration files .
+1. You need to read readme.md of UploadGui and follow it to upload configuration files.(Select the folder named PlayFabData)
 2. Log into Game Manager
 3. Click the new title.
 4. Navigate to Settings then API Features
 5. Ensure that your clients are allowed to post player statistics. 
-
 * note: this would not be a good idea if this was a competitive game.
+6. Navigate to Actomation then Rules, click New Rule and setup as picture below.
+![payment](https://github.com/Rockiez/PlayFab_Demo/raw/master/image/Rule.jpg)
 
 ### Client Setup:
 

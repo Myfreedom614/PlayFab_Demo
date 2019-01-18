@@ -266,12 +266,6 @@
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
-    <Reference Include="ChannelPurchase">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.xiaomi@1.0.3/ChannelPurchase.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityStore">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.xiaomi@1.0.3/UnityStore.dll</HintPath>
-    </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2018.3.0f2\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
     </Reference>
@@ -638,14 +632,6 @@
     <ProjectReference Include="Unity.Analytics.DataPrivacy.csproj">
       <Project>{D6E266C6-3D1F-28C8-9FEB-2A01E44DBF77}</Project>
       <Name>Unity.Analytics.DataPrivacy</Name>
-    </ProjectReference>
-    <ProjectReference Include="Editor.csproj">
-      <Project>{B2E402A9-DAB0-44FA-0EB3-EAC8D63ADBEE}</Project>
-      <Name>Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="XiaomiSupport.csproj">
-      <Project>{A2A6A8B2-DDE1-D596-6008-90CE9610175C}</Project>
-      <Name>XiaomiSupport</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

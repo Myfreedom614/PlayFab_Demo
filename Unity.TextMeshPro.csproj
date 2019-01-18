@@ -305,12 +305,6 @@
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
-    <Reference Include="ChannelPurchase">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.xiaomi@1.0.3/ChannelPurchase.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityStore">
-      <HintPath>C:/Users/v-here/Documents/PlayFab_Demo/Library/PackageCache/com.unity.xiaomi@1.0.3/UnityStore.dll</HintPath>
-    </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2018.3.0f2\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
     </Reference>

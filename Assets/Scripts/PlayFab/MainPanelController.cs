@@ -7,6 +7,7 @@ using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.DataModels;
 using PlayFab.AuthenticationModels;
+using PlayFab.Json;
 
 public class MainPanelController : MonoBehaviour{
 
@@ -23,14 +24,80 @@ public class MainPanelController : MonoBehaviour{
     public GameObject paymentPanel;
 
 
-	//public GameObject dataLoadingWindow;
 	public GameObject userMessage;
     public Text lvValue;
     public Text usernameText;
 	public GameObject currency;
     public Text goldCurrencyCount;
     public Text diamondCurrencyCount;
-    //public GameObject pageSwitchButton;
+
+    public string pushToken;
+    public string playFabId = PlayFabAuthService.PlayFabId;
+    public string lastMsg;
+
+
+    private void OnPfFail(PlayFabError error)
+    {
+        Debug.Log("PlayFab: api error: " + error.GenerateErrorReport());
+    }
+
+    public void Start()
+    {
+        Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+        Firebase.Messaging.FirebaseMessaging.MessageReceived += OnMessageReceived;
+        RegisterForPush();
+
+    }
+
+    private void RegisterForPush()
+    {
+        if (string.IsNullOrEmpty(pushToken) || string.IsNullOrEmpty(playFabId))
+            return;
+
+#if UNITY_ANDROID
+        var request = new AndroidDevicePushNotificationRegistrationRequest
+        {
+            DeviceToken = pushToken,
+            SendPushNotificationConfirmation = true,
+            ConfirmationMessage = "Push notifications registered successfully"
+        };
+        PlayFabClientAPI.AndroidDevicePushNotificationRegistration(request, OnPfAndroidReg, OnPfFail);
+#endif
+    }
+
+    private void OnPfAndroidReg(AndroidDevicePushNotificationRegistrationResult result)
+    {
+        Debug.Log("PlayFab: Push Registration Successful");
+    }
+
+    private void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+    {
+        Debug.Log("PlayFab: Received Registration Token: " + token.Token);
+        pushToken = token.Token;
+        RegisterForPush();
+    }
+
+    private void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
+    {
+        Debug.Log("PlayFab: Received a new message from: " + e.Message.From);
+        lastMsg = "";
+        if (e.Message.Data != null)
+        {
+            lastMsg += "DATA: " + JsonWrapper.SerializeObject(e.Message.Data) + "\n";
+            Debug.Log("PlayFab: Received a message with data:");
+            foreach (var pair in e.Message.Data)
+                Debug.Log("PlayFab data element: " + pair.Key + "," + pair.Value);
+        }
+        if (e.Message.Notification != null)
+        {
+            Debug.Log("PlayFab: Received a notification:");
+            lastMsg += "TITLE: " + e.Message.Notification.Title + "\n";
+            lastMsg += "BODY: " + e.Message.Notification.Body + "\n";
+        }
+    }
+
+
+
 
     int requestNum = 7;
 	void OnEnable(){

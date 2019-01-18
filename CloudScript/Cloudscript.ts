@@ -46,6 +46,40 @@ handlers.SetupPlayerData = function (args:any,context: IPlayFabContext ) {
   },Permission: "Public"})
 }
 
+handlers.CheckAchievement = function(args:any, context:IPlayFabContext){
+  let eventData:PlayStreamModels.character_statistic_changed = <PlayStreamModels.character_statistic_changed>context.playStreamEvent;
+  let statisticName = eventData.StatisticName;
+  let newStatisticValue = eventData.StatisticValue;
+
+  let titleAlldata = server.GetTitleData({}).Data
+
+
+  let playerAchievementStata =JSON.parse( server.GetUserReadOnlyData({PlayFabId: currentPlayerId}).Data["Achievement"].Value)
+
+  for (const key in titleAlldata) {
+    if (titleAlldata.hasOwnProperty(key)) {
+
+      const element = JSON.parse(titleAlldata[key]);
+      if (element["Description"] == statisticName) {
+
+        for (const key in playerAchievementStata) {
+          if (playerAchievementStata.hasOwnProperty(key)) {
+            const element = playerAchievementStata[key];
+
+            if (newStatisticValue>= element["Count"] && element == false) {
+              server.SendPushNotification({Recipient:context.playerProfile.PlayerId,Message:"You have new achievement can get."})
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+
+
+}
+
 handlers.GetAchievement = function(args:any,context: IPlayFabContext){
   let titledata:object
     titledata = JSON.parse(server.GetTitleData( {Keys:args}).Data[args])
@@ -76,6 +110,8 @@ handlers.GetAchievement = function(args:any,context: IPlayFabContext){
   }
   return {"Result":result}
 }
+
+
 
 handlers.ExchangeGold = function(args)
 {
@@ -109,3 +145,4 @@ handlers.PurchaseDiamond = function (args)
   }).Balance;
   return { diamondCurrencyResult : GMResult};
 }
+
