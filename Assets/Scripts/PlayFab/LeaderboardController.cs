@@ -21,10 +21,22 @@ public class LeaderboardController : MonoBehaviour {
 	private Dictionary<string, Dictionary<uint, uint>> leaderboard = new Dictionary<string, Dictionary<uint,uint>>();
 	private string leaderboardType="";
     private Text[] localUserTexts;
+    private List<StatisticValue> localUserStatistics;
+    private GameObject but;
+    private GameObject[] inputs;
 
 	void OnEnable () {
         localUserTexts = localUser.GetComponentsInChildren<Text>();
         localUserTexts[1].text = PlayFabUserData.username;
+        localUserStatistics = new List<StatisticValue>();
+        but = localUser.GetComponentInChildren<Button>().gameObject;
+        List<GameObject> inputsList = new List<GameObject>();
+        foreach (var user in users)
+        {
+            inputsList.Add(user.GetComponentInChildren<InputField>().gameObject);
+        }
+
+        inputs = inputsList.ToArray();
 
         TotalKillButton.Select();
 		ClickTotalKillButton ();
@@ -40,13 +52,18 @@ public class LeaderboardController : MonoBehaviour {
 
         texts[0].text = "-";
         texts[2].text = "-";
-
+        but.SetActive(false);
         foreach (var user in users)
         {
             texts = user.GetComponentsInChildren<Text>();
             texts[0].text = "-";
             texts[1].text = "-";
             texts[2].text = "-";
+        }
+
+        foreach (var input in inputs)
+        {
+            input.SetActive(false);
         }
 
         var leaderboardRequest = new GetLeaderboardRequest() {
@@ -71,13 +88,18 @@ public class LeaderboardController : MonoBehaviour {
         texts[0].text = "-";
         texts[1].text = PlayFabUserData.username;
         texts[2].text = "-";
-
+        but.SetActive(false);
         foreach (var user in users)
         {
             texts = user.GetComponentsInChildren<Text>();
             texts[0].text = "-";
             texts[1].text = "-";
             texts[2].text = "-";
+
+        }
+        foreach (var input in inputs)
+        {
+            input.SetActive(false);
         }
 
         var leaderboardRequest = new GetLeaderboardRequest()
@@ -104,15 +126,19 @@ public class LeaderboardController : MonoBehaviour {
         texts[0].text = "-";
         texts[1].text = PlayFabUserData.username;
         texts[2].text = "-";
-
+        but.SetActive(false);
         foreach (var user in users)
         {
             texts = user.GetComponentsInChildren<Text>();
             texts[0].text = "-";
             texts[1].text = "-";
             texts[2].text = "-";
-        }
 
+        }
+        foreach (var input in inputs)
+        {
+            input.SetActive(false);
+        }
         var leaderboardRequest = new GetLeaderboardRequest()
         {
             MaxResultsCount = 100,
@@ -124,8 +150,84 @@ public class LeaderboardController : MonoBehaviour {
         };
         PlayFabClientAPI.GetLeaderboard(leaderboardRequest, OnGetLeaderboard, OnPlayFabError);
     }
+    public void ClickSetStatisticsButton()
+    {
 
-	void OnGetLeaderboard(GetLeaderboardResult result){
+        leaderboardType = "";
+        Text[] texts;
+        texts = localUser.GetComponentsInChildren<Text>();
+
+        texts[0].text = "";
+        texts[1].text = "";
+        texts[2].text = "";
+
+        foreach (var user in users)
+        {
+            texts = user.GetComponentsInChildren<Text>();
+            texts[0].text = "";
+            texts[1].text = "";
+            texts[2].text = "";
+        }
+
+        foreach (var gb in inputs)
+        {
+            gb.SetActive(true);
+        }
+        but.SetActive(true);
+
+        var statisticsRequest = new GetPlayerStatisticsRequest()
+        {
+        };
+        PlayFabClientAPI.GetPlayerStatistics(statisticsRequest, s =>
+         {
+             int i = 0;
+             foreach (StatisticValue statistic in s.Statistics)
+             {
+                 localUserStatistics.Add(statistic);
+                 if (i < 3)
+                 {
+                     texts = users[i].GetComponentsInChildren<Text>();
+                     texts[0].text = statistic.StatisticName;
+                     texts[1].text = "";
+                     texts[2].text = "";
+                     inputs[i].GetComponent<InputField>().text = statistic.Value.ToString();
+                     users[i].SetActive(true);
+                 }
+                 i++;
+             }
+             localUserTexts[0].text = "";
+             localUserTexts[1].text = "";
+             localUserTexts[2].text = "";
+
+         }, OnPlayFabError);
+    }
+
+    public void OnClickUpdateStatisticsButton()
+    {
+        var updateStatisticsRequest = new UpdatePlayerStatisticsRequest()
+        {
+            Statistics = new List<StatisticUpdate>()
+        };
+        int i = 0;
+        foreach (var statistics in localUserStatistics)
+        {
+            updateStatisticsRequest.Statistics.Add(
+                new StatisticUpdate() {
+                    StatisticName = statistics.StatisticName,
+                    Value = int.Parse(inputs[i].GetComponent<InputField>().text) });
+            i++;
+        }
+
+
+        PlayFabClientAPI.UpdatePlayerStatistics(updateStatisticsRequest, OnUpdateStatisticsResult, OnPlayFabError);
+    }
+
+    void OnUpdateStatisticsResult(UpdatePlayerStatisticsResult result)
+    {
+        ClickSetStatisticsButton();
+    }
+
+    void OnGetLeaderboard(GetLeaderboardResult result){
 		leaderboard.Clear ();
 
 		foreach (PlayerLeaderboardEntry entry in result.Leaderboard) {
