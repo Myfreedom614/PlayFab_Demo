@@ -78,8 +78,8 @@ These instructions describe how to set up your own personalized back-end for the
 ![Rule](https://github.com/Rockiez/PlayFab_Demo/raw/master/image/Rule.jpg)
 7. When have some users in your title, you can create Scheduled Tasks to execute some setup method in CloudScript for each user.You can refer to the following figure to configure that.
 ![ScheduledTask](https://github.com/Rockiez/PlayFab_Demo/raw/master/image/ScheduledTask.jpg)
-
-
+8. Click[Getting started with Photon and Unity](https://api.playfab.com/docs/tutorials/landing-tournaments/photon-unity), and follow the guide to set up Photon Multiplayer to work with PlayFab
+9. If you build the project for Android device, Click[Push Notifications for Android](https://api.playfab.com/docs/tutorials/landing-players/push-notification-basics/push-notifications-for-android) to set up push notifications on Android.
 ### Client Setup:
 
 #### Prerequisite:
